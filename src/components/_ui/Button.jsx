@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from "@emotion/styled";
-import colors from "styles/colors";
-import dimensions from "styles/dimensions";
+import colors from "./../../styles/colors";
+import dimensions from "./../../styles/dimensions";
 
 const ButtonContainer = styled("button")`
     padding: 1em 2em;

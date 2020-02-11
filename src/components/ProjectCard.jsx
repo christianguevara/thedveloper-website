@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "gatsby";
 import { RichText } from "prismic-reactjs";
 import styled from "@emotion/styled";
-import dimensions from "styles/dimensions";
-import colors from "styles/colors";
+import dimensions from "./../styles/dimensions";
+import colors from "./../styles/colors";
 import PropTypes from "prop-types";
 
 const ProjectCardContainer = styled(Link)`

@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { StaticQuery, graphql } from "gatsby";
 import styled from "@emotion/styled";
 import { Global } from "@emotion/core";
-import globalStyles from 'styles/global';
-import typeStyles from 'styles/typography';
-import dimensions from "styles/dimensions";
-import Footer from "components/Footer";
-import Header from "components/Header";
+import globalStyles from './../styles/global';
+import typeStyles from './../styles/typography';
+import dimensions from "./../styles/dimensions";
+import Footer from "./../components/Footer";
+import Header from "./../components/Header";
 import 'styles/fonts.scss';
 
 const LayoutContainer = styled.div`

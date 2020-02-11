@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { graphql } from "gatsby";
 import styled from "@emotion/styled";
-import Layout from "components/Layout";
-import ProjectCard from "components/ProjectCard";
+import Layout from "./../components/Layout";
+import ProjectCard from "./../components/ProjectCard";
 
 const WorkTitle = styled("h1")`
     margin-bottom: 1em;

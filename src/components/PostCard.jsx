@@ -3,7 +3,7 @@ import Moment from 'react-moment';
 import { Link } from "gatsby";
 import { RichText } from "prismic-reactjs";
 import styled from "@emotion/styled";
-import colors from "styles/colors";
+import colors from "./../styles/colors";
 import PropTypes from "prop-types";
 
 const PostCardContainer = styled(Link)`

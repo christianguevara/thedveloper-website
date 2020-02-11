@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { graphql } from "gatsby";
 import styled from "@emotion/styled";
-import dimensions from "styles/dimensions";
-import Layout from "components/Layout";
-import PostCard from "components/PostCard";
+import dimensions from "./../styles/dimensions";
+import Layout from "./../components/Layout";
+import PostCard from "./../components/PostCard";
 
 const BlogTitle = styled("h1")`
     margin-bottom: 1em;
