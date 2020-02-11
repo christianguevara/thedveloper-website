@@ -1,14 +1,14 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { StaticQuery, graphql } from "gatsby";
-import styled from "@emotion/styled";
-import { Global } from "@emotion/core";
-import globalStyles from './../styles/global';
-import typeStyles from './../styles/typography';
-import dimensions from "./../styles/dimensions";
-import Footer from "./../components/Footer";
-import Header from "./../components/Header";
-import 'styles/fonts.scss';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { graphql, StaticQuery } from 'gatsby';
+import styled from '@emotion/styled';
+import { Global } from '@emotion/core';
+import globalStyles from '../styles/global';
+import typeStyles from '../styles/typography';
+import dimensions from '../styles/dimensions';
+import Footer from './Footer';
+import Header from './Header';
+import '../styles/fonts.scss';
 
 const LayoutContainer = styled.div`
     max-width: ${dimensions.maxwidthDesktop}px;
@@ -32,8 +32,8 @@ const LayoutContainer = styled.div`
 `;
 
 const Layout = ({ children }) => (
-    <StaticQuery
-        query={graphql`
+  <StaticQuery
+    query={graphql`
             query SiteTitleQuery {
                 site {
                     siteMetadata {
@@ -42,23 +42,23 @@ const Layout = ({ children }) => (
                 }
             }
         `}
-        render={data => (
-            <LayoutContainer className="div">
-                <Global styles={[globalStyles, typeStyles]} />
-                <div className="Layout">
-                    <Header />
-                    <main className="Layout__content">
-                        {children}
-                    </main>
-                    <Footer />
-                </div>
-            </LayoutContainer>
-        )}
-    />
-)
+    render={(data) => (
+      <LayoutContainer className="div">
+        <Global styles={[globalStyles, typeStyles]} />
+        <div className="Layout">
+          <Header />
+          <main className="Layout__content">
+            {children}
+          </main>
+          <Footer />
+        </div>
+      </LayoutContainer>
+    )}
+  />
+);
 
 Layout.propTypes = {
-    children: PropTypes.node.isRequired,
-}
+  children: PropTypes.node.isRequired,
+};
 
 export default Layout;

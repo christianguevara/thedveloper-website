@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import Helmet from "react-helmet";
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import Moment from 'react-moment';
 import { graphql } from 'gatsby';
-import { RichText } from "prismic-reactjs";
-import styled from "@emotion/styled";
-import colors from "styles/colors";
-import Layout from "components/Layout";
+import { RichText } from 'prismic-reactjs';
+import styled from '@emotion/styled';
+import colors from '../styles/colors';
+import Layout from '../components/Layout';
 
-const PostHeroContainer = styled("div")`
+const PostHeroContainer = styled('div')`
     max-height: 500px;
     overflow: hidden;
     display: flex;
@@ -19,9 +19,9 @@ const PostHeroContainer = styled("div")`
     img {
         width: 100%;
     }
-`
+`;
 
-const PostHeroAnnotation = styled("div")`
+const PostHeroAnnotation = styled('div')`
     padding-top: 0.25em;
 
     h6 {
@@ -34,9 +34,9 @@ const PostHeroAnnotation = styled("div")`
     a {
         color: currentColor;
     }
-`
+`;
 
-const PostCategory = styled("div")`
+const PostCategory = styled('div')`
     max-width: 550px;
     margin: 0 auto;
     text-align: center;
@@ -47,9 +47,9 @@ const PostCategory = styled("div")`
         margin-top: 0;
         margin-bottom: 1em;
     }
-`
+`;
 
-const PostTitle = styled("div")`
+const PostTitle = styled('div')`
     max-width: 550px;
     margin: 0 auto;
     text-align: center;
@@ -57,9 +57,9 @@ const PostTitle = styled("div")`
     h1 {
         margin-top: 0;
     }
-`
+`;
 
-const PostBody = styled("div")`
+const PostBody = styled('div')`
     max-width: 550px;
     margin: 0 auto;
 
@@ -71,9 +71,9 @@ const PostBody = styled("div")`
             width: 100%;
         }
     }
-`
+`;
 
-const PostMetas = styled("div")`
+const PostMetas = styled('div')`
     max-width: 550px;
     margin: 0 auto;
     display: flex;
@@ -82,99 +82,115 @@ const PostMetas = styled("div")`
     justify-content: space-between;
     font-size: 0.85em;
     color: ${colors.grey600};
-`
+`;
 
-const PostAuthor = styled("div")`
+const PostAuthor = styled('div')`
     margin: 0;
-`
+`;
 
-const PostDate = styled("div")`
+const PostDate = styled('div')`
     margin: 0;
-`
+`;
 
-const Post = ({ post, meta }) => {
-    return (
-        <>
-            <Helmet
-                title={`${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`}
-                titleTemplate={`%s | ${meta.title}`}
-                meta={[
-                    {
-                        name: `description`,
-                        content: meta.description,
-                    },
-                    {
-                        property: `og:title`,
-                        content: `${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`,
-                    },
-                    {
-                        property: `og:description`,
-                        content: meta.description,
-                    },
-                    {
-                        property: `og:type`,
-                        content: `website`,
-                    },
-                    {
-                        name: `twitter:card`,
-                        content: `summary`,
-                    },
-                    {
-                        name: `twitter:creator`,
-                        content: meta.author,
-                    },
-                    {
-                        name: `twitter:title`,
-                        content: meta.title,
-                    },
-                    {
-                        name: `twitter:description`,
-                        content: meta.description,
-                    },
-                ].concat(meta)}
-            />
-            <Layout>
-                <PostCategory>
-                    {RichText.render(post.post_category)}
-                </PostCategory>
-                <PostTitle>
-                    {RichText.render(post.post_title)}
-                </PostTitle>
-                <PostMetas>
-                    <PostAuthor>
-                        {post.post_author}
-                    </PostAuthor>
-                    <PostDate>
-                        <Moment format="MMMM D, YYYY">{post.post_date}</Moment>
-                    </PostDate>
-                </PostMetas>
-                    {post.post_hero_image && (
-                    <PostHeroContainer>
-                        <img src={post.post_hero_image.url} alt="bees" />
-                        <PostHeroAnnotation>
-                            {RichText.render(post.post_hero_annotation)}
-                        </PostHeroAnnotation>
-                    </PostHeroContainer>
-                )}
-                <PostBody>
-                    {RichText.render(post.post_body)}
-                </PostBody>
-            </Layout>
-        </>
-    )
-}
+const Post = ({ post, meta }) => (
+  <>
+    <Helmet
+      title={`${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`}
+      titleTemplate={`%s | ${meta.title}`}
+      meta={[
+        {
+          name: 'description',
+          content: meta.description,
+        },
+        {
+          property: 'og:title',
+          content: `${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`,
+        },
+        {
+          property: 'og:description',
+          content: meta.description,
+        },
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary',
+        },
+        {
+          name: 'twitter:creator',
+          content: meta.author,
+        },
+        {
+          name: 'twitter:title',
+          content: meta.title,
+        },
+        {
+          name: 'twitter:description',
+          content: meta.description,
+        },
+      ].concat(meta)}
+    />
+    <Layout>
+      <PostCategory>
+        {RichText.render(post.post_category)}
+      </PostCategory>
+      <PostTitle>
+        {RichText.render(post.post_title)}
+      </PostTitle>
+      <PostMetas>
+        <PostAuthor>
+          {post.post_author}
+        </PostAuthor>
+        <PostDate>
+          <Moment format="MMMM D, YYYY">{post.post_date}</Moment>
+        </PostDate>
+      </PostMetas>
+      {post.post_hero_image && (
+        <PostHeroContainer>
+          <img src={post.post_hero_image.url} alt="bees" />
+          <PostHeroAnnotation>
+            {RichText.render(post.post_hero_annotation)}
+          </PostHeroAnnotation>
+        </PostHeroContainer>
+      )}
+      <PostBody>
+        {RichText.render(post.post_body)}
+      </PostBody>
+    </Layout>
+  </>
+);
 
-export default ({ data }) => {
-    const postContent = data.prismic.allPosts.edges[0].node;
-    const meta = data.site.siteMetadata;
-    return (
-        <Post post={postContent} meta={meta}/>
-    )
-}
+const postWrapper = ({ data }) => {
+  const postContent = data.prismic.allPosts.edges[0].node;
+  const meta = data.site.siteMetadata;
+  return (
+    <Post post={postContent} meta={meta} />
+  );
+};
+
+postWrapper.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+export default postWrapper;
 
 Post.propTypes = {
-    post: PropTypes.object.isRequired,
-    meta: PropTypes.object.isRequired,
+  post: PropTypes.shape({
+    post_title: PropTypes.string.isRequired,
+    post_date: PropTypes.object.isRequired,
+    post_category: PropTypes.string.isRequired,
+    post_body: PropTypes.string.isRequired,
+    post_author: PropTypes.string.isRequired,
+    post_hero_image: PropTypes.object.isRequired,
+    post_hero_annotation: PropTypes.string.isRequired,
+  }).isRequired,
+  meta: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    author: PropTypes.string,
+  }).isRequired,
 };
 
 export const query = graphql`
@@ -206,4 +222,4 @@ export const query = graphql`
             }
         }
     }
-`
+`;

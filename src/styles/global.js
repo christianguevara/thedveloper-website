@@ -1,4 +1,4 @@
-import css from "@emotion/css";
+import css from '@emotion/css';
 import colors from './colors';
 import dimensions from './dimensions';
 
@@ -45,6 +45,6 @@ const globalStyles = css`
         height: 100%;
         min-height: 100% !important;
     }
-`
+`;
 
 export default globalStyles;

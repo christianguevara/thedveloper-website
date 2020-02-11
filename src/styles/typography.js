@@ -1,5 +1,5 @@
 import css from '@emotion/css';
-import dimensions from "styles/dimensions";
+import dimensions from './dimensions';
 
 const typeStyles = css`
     h1 {
@@ -49,6 +49,6 @@ const typeStyles = css`
             cursor: pointer;
         }
     }
-`
+`;
 
 export default typeStyles;

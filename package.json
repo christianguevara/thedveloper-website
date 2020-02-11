@@ -6,6 +6,7 @@
   "author": "Marguerite Roth | marguerite.io | marguerite.roth@gmail.com",
   "dependencies": {
     "@emotion/core": "^10.0.10",
+    "@emotion/css": "^10.0.10",
     "@emotion/styled": "^10.0.12",
     "gatsby": "^2.12.0",
     "gatsby-image": "^2.2.20",
@@ -37,6 +38,13 @@
     "smooth-scroll": "^16.0.3"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-graphql": "^3.1.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "gatsby-plugin-remove-trailing-slashes": "^2.0.11",
     "prettier": "^1.18.2"
   },

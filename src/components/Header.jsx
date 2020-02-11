@@ -1,21 +1,21 @@
-import React from "react";
-import { Link } from "gatsby";
-import styled from "@emotion/styled";
-import colors from "./../styles/colors";
-import dimensions from "./../styles/dimensions";
-import Logo from "./../components/_ui/Logo";
+import React from 'react';
+import { Link } from 'gatsby';
+import styled from '@emotion/styled';
+import colors from '../styles/colors';
+import dimensions from '../styles/dimensions';
+import Logo from './_ui/Logo';
 
-const HeaderContainer = styled("div")`
+const HeaderContainer = styled('div')`
     padding-top: 3.75em;
     padding-bottom: 3em;
-`
+`;
 
-const HeaderContent = styled("div")`
+const HeaderContent = styled('div')`
     display: flex;
     justify-content: space-between;
-`
+`;
 
-const HeaderLinks = styled("div")`
+const HeaderLinks = styled('div')`
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-gap: 7em;
@@ -70,28 +70,30 @@ const HeaderLinks = styled("div")`
             }
         }
     }
-`
+`;
 
 const Header = () => (
-    <HeaderContainer>
-        <HeaderContent>
-            <Link to="/">
-                <Logo/>
-            </Link>
-            <HeaderLinks>
-                <Link
-                    activeClassName="Link--is-active"
-                    to="/work">
-                    Work
-                </Link>
-                <Link
-                    activeClassName="Link--is-active"
-                    to="/blog">
-                    Blog
-                </Link>
-            </HeaderLinks>
-        </HeaderContent>
-    </HeaderContainer>
-)
+  <HeaderContainer>
+    <HeaderContent>
+      <Link to="/">
+        <Logo />
+      </Link>
+      <HeaderLinks>
+        <Link
+          activeClassName="Link--is-active"
+          to="/work"
+        >
+          Work
+        </Link>
+        <Link
+          activeClassName="Link--is-active"
+          to="/blog"
+        >
+          Blog
+        </Link>
+      </HeaderLinks>
+    </HeaderContent>
+  </HeaderContainer>
+);
 
 export default Header;
