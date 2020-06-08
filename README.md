@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c11a41c1-7a15-4e76-83f7-12416613410d/deploy-status)](https://app.netlify.com/sites/thedveloper-website/deploys)
+
 # Prist | A Gatsby & Prismic Starter
 
 A light-themed starter powered by [Gatsby v2](https://www.gatsbyjs.org) and [Prismic](https://prismic.io/) to showcase portfolios and blogs.

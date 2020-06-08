@@ -1,93 +1,106 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Helmet from "react-helmet";
-import { graphql } from "gatsby";
-import styled from "@emotion/styled";
-import Layout from "./../components/Layout";
-import ProjectCard from "./../components/ProjectCard";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+import { graphql } from 'gatsby';
+import styled from '@emotion/styled';
+import { Layout } from '../components/Layout';
+import ProjectCard from '../components/ProjectCard';
 
-const WorkTitle = styled("h1")`
+const WorkTitle = styled('h1')`
     margin-bottom: 1em;
-`
+`;
 
-const Work = ({ projects, meta }) => (
-    <>
-        <Helmet
-            title={`Work | Prist, Gatsby & Prismic Starter`}
-            titleTemplate={`%s | Work | Prist, Gatsby & Prismic Starter`}
-            meta={[
-                {
-                    name: `description`,
-                    content: meta.description,
-                },
-                {
-                    property: `og:title`,
-                    content: `Work | Prist, Gatsby & Prismic Starter`,
-                },
-                {
-                    property: `og:description`,
-                    content: meta.description,
-                },
-                {
-                    property: `og:type`,
-                    content: `website`,
-                },
-                {
-                    name: `twitter:card`,
-                    content: `summary`,
-                },
-                {
-                    name: `twitter:creator`,
-                    content: meta.author,
-                },
-                {
-                    name: `twitter:title`,
-                    content: meta.title,
-                },
-                {
-                    name: `twitter:description`,
-                    content: meta.description,
-                },
-            ].concat(meta)}
-        />
-        <Layout>
-            <WorkTitle>
-                Work
-            </WorkTitle>
-            <>
-                {projects.map((project, i) => (
-                    <ProjectCard
-                        key={i}
-                        category={project.node.project_category}
-                        title={project.node.project_title}
-                        description={project.node.project_preview_description}
-                        thumbnail={project.node.project_preview_thumbnail}
-                        uid={project.node._meta.uid}
-                    />
-                ))}
-            </>
-        </Layout>
-    </>
+const Work = ({ projects, meta, pageContext }) => (
+  <>
+    <Helmet
+      title="Work | Prist, Gatsby & Prismic Starter"
+      titleTemplate="%s | Work | Prist, Gatsby & Prismic Starter"
+      meta={[
+        {
+          name: 'description',
+          content: meta.description,
+        },
+        {
+          property: 'og:title',
+          content: 'Work | Prist, Gatsby & Prismic Starter',
+        },
+        {
+          property: 'og:description',
+          content: meta.description,
+        },
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary',
+        },
+        {
+          name: 'twitter:creator',
+          content: meta.author,
+        },
+        {
+          name: 'twitter:title',
+          content: meta.title,
+        },
+        {
+          name: 'twitter:description',
+          content: meta.description,
+        },
+      ].concat(meta)}
+    />
+    <Layout pageContext={pageContext}>
+      <WorkTitle>
+        Work
+      </WorkTitle>
+      <>
+        {projects.map((project) => (
+          <ProjectCard
+            key={project.node._meta.uid}
+            category={project.node.project_category}
+            title={project.node.project_title}
+            description={project.node.project_preview_description}
+            thumbnail={project.node.project_preview_thumbnail}
+            uid={project.node._meta.uid}
+          />
+        ))}
+      </>
+    </Layout>
+  </>
 );
 
-export default ({ data }) => {
-    const projects = data.prismic.allProjects.edges;
-    const meta = data.site.siteMetadata;
-    if (!projects) return null;
+const workWrapper = ({ data, pageContext }) => {
+  const projects = data.prismic.allProjects.edges;
+  const meta = data.site.siteMetadata;
+  if (!projects) return null;
 
-    return (
-        <Work projects={projects} meta={meta}/>
-    )
-}
+  return (
+    <Work projects={projects} meta={meta} pageContext={pageContext} />
+  );
+};
+
+workWrapper.propTypes = {
+  data: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export default workWrapper;
 
 Work.propTypes = {
-    projects: PropTypes.array.isRequired,
+  projects: PropTypes.array.isRequired,
+  meta: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export const query = graphql`
-    {
+    query WorkQuery($lang: String! = "en-us") {
         prismic {
-            allProjects {
+            allProjects(lang: $lang) {
                 edges {
                     node {
                         project_title
@@ -97,6 +110,7 @@ export const query = graphql`
                         project_post_date
                         _meta {
                             uid
+                            lang
                         }
                     }
                 }
@@ -110,5 +124,4 @@ export const query = graphql`
             }
         }
     }
-`
-
+`;

@@ -1,12 +1,13 @@
-import React from "react";
-import { Link } from "gatsby";
-import { RichText } from "prismic-reactjs";
-import styled from "@emotion/styled";
-import dimensions from "./../styles/dimensions";
-import colors from "./../styles/colors";
-import PropTypes from "prop-types";
+import React from 'react';
+import { RichText } from 'prismic-reactjs';
+import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import dimensions from '../styles/dimensions';
+import colors from '../styles/colors';
+import LocalizedLink from './LocalizedLink';
+import { LocaleContext } from './Layout';
 
-const ProjectCardContainer = styled(Link)`
+const ProjectCardContainer = styled(LocalizedLink)`
     display: grid;
     grid-template-columns: 4fr 7fr;
     box-shadow: 0px 9px 24px rgba(0, 0, 0, 0.06);
@@ -52,9 +53,9 @@ const ProjectCardContainer = styled(Link)`
             transition: all 150ms ease-in-out;
         }
     }
-`
+`;
 
-const ProjectCardContent = styled("div")`
+const ProjectCardContent = styled('div')`
     background: white;
     padding: 4em 3em 2.25em 3em;
     position: relative;
@@ -79,19 +80,19 @@ const ProjectCardContent = styled("div")`
     @media(max-width:${dimensions.maxwidthTablet}px) {
         grid-row: 2;
     }
-`
+`;
 
-const ProjectCardCategory = styled("h6")`
+const ProjectCardCategory = styled('h6')`
     font-weight: 600;
     color: ${colors.grey600};
-`
+`;
 
-const ProjectCardTitle = styled("h3")`
+const ProjectCardTitle = styled('h3')`
     margin-bottom: 0.5em;
     margin-top: 0.5em;
-`
+`;
 
-const ProjectCardBlurb = styled("div")`
+const ProjectCardBlurb = styled('div')`
     margin-bottom: 0.5em;
     margin-top: 0.5em;
     margin-bottom: 5em;
@@ -99,9 +100,9 @@ const ProjectCardBlurb = styled("div")`
     @media(max-width:${dimensions.maxwidthTablet}px) {
         margin-bottom: 2.5em;
     }
-`
+`;
 
-const ProjectCardAction = styled("div")`
+const ProjectCardAction = styled('div')`
     font-weight: 600;
     text-decoration: none;
     color: currentColor;
@@ -113,9 +114,9 @@ const ProjectCardAction = styled("div")`
         display: inline-block;
         transition: transform 400ms ease-in-out;
     }
-`
+`;
 
-const ProjectCardImageContainer = styled("div")`
+const ProjectCardImageContainer = styled('div')`
     background: ${colors.grey200};
     display: flex;
     justify-content: center;
@@ -155,36 +156,45 @@ const ProjectCardImageContainer = styled("div")`
             max-width: 300px;
         }
     }
-`
+`;
 
-const ProjectCard = ({ category, title, description, thumbnail, uid}) => (
-    <ProjectCardContainer to={`/work/${uid}`}>
-        <ProjectCardContent className="ProjectCardContent">
-            <ProjectCardCategory>
-                {category[0].text}
-            </ProjectCardCategory>
-            <ProjectCardTitle>
-                {title[0].text}
-            </ProjectCardTitle>
-            <ProjectCardBlurb>
-                {RichText.render(description)}
-            </ProjectCardBlurb>
-            <ProjectCardAction className="ProjectCardAction">
-                Details <span>&#8594;</span>
-            </ProjectCardAction>
-        </ProjectCardContent>
-        <ProjectCardImageContainer className="ProjectCardImageContainer">
-            <img src={thumbnail.url} alt={title[0].text}/>
-        </ProjectCardImageContainer>
+const ProjectCard = ({
+  category, title, description, thumbnail, uid,
+}) => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
+
+  return (
+    <ProjectCardContainer to={`/project/${uid}`}>
+      <ProjectCardContent className="ProjectCardContent">
+        <ProjectCardCategory>
+          {category[0].text}
+        </ProjectCardCategory>
+        <ProjectCardTitle>
+          {title[0].text}
+        </ProjectCardTitle>
+        <ProjectCardBlurb>
+          {RichText.render(description)}
+        </ProjectCardBlurb>
+        <ProjectCardAction className="ProjectCardAction">
+          {i18n.projectDetails}
+          {' '}
+          <span>&#8594;</span>
+        </ProjectCardAction>
+      </ProjectCardContent>
+      <ProjectCardImageContainer className="ProjectCardImageContainer">
+        <img src={thumbnail.url} alt={title[0].text} />
+      </ProjectCardImageContainer>
     </ProjectCardContainer>
-)
+  );
+};
 
 export default ProjectCard;
 
 ProjectCard.propTypes = {
-    category: PropTypes.array.isRequired,
-    thumbnail: PropTypes.object.isRequired,
-    title: PropTypes.array.isRequired,
-    description: PropTypes.array.isRequired,
-    uid: PropTypes.string.isRequired
-}
+  category: PropTypes.array.isRequired,
+  thumbnail: PropTypes.object.isRequired,
+  title: PropTypes.array.isRequired,
+  description: PropTypes.array.isRequired,
+  uid: PropTypes.string.isRequired,
+};

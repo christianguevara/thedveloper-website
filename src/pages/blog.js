@@ -1,17 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Helmet from "react-helmet";
-import { graphql } from "gatsby";
-import styled from "@emotion/styled";
-import dimensions from "./../styles/dimensions";
-import Layout from "./../components/Layout";
-import PostCard from "./../components/PostCard";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+import { graphql } from 'gatsby';
+import styled from '@emotion/styled';
+import dimensions from '../styles/dimensions';
+import { Layout } from '../components/Layout';
+import PostCard from '../components/PostCard';
 
-const BlogTitle = styled("h1")`
+const BlogTitle = styled('h1')`
     margin-bottom: 1em;
-`
+`;
 
-const BlogGrid = styled("div")`
+const BlogGrid = styled('div')`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 2.5em;
@@ -25,89 +25,102 @@ const BlogGrid = styled("div")`
         grid-template-columns: 1fr;
         grid-gap: 2.5em;
     }
-`
+`;
 
-const Blog = ({ posts, meta }) => (
-    <>
-        <Helmet
-            title={`Blog | Prist, Gatsby & Prismic Starter`}
-            titleTemplate={`%s | Blog | Prist, Gatsby & Prismic Starter`}
-            meta={[
-                {
-                    name: `description`,
-                    content: meta.description,
-                },
-                {
-                    property: `og:title`,
-                    content: `Blog | Prist, Gatsby & Prismic Starter`,
-                },
-                {
-                    property: `og:description`,
-                    content: meta.description,
-                },
-                {
-                    property: `og:type`,
-                    content: `website`,
-                },
-                {
-                    name: `twitter:card`,
-                    content: `summary`,
-                },
-                {
-                    name: `twitter:creator`,
-                    content: meta.author,
-                },
-                {
-                    name: `twitter:title`,
-                    content: meta.title,
-                },
-                {
-                    name: `twitter:description`,
-                    content: meta.description,
-                },
-            ].concat(meta)}
-        />
-        <Layout>
-            <BlogTitle>
-                Blog
-            </BlogTitle>
-            <BlogGrid>
-                {posts.map((post, i) => (
-                    <PostCard
-                        key={i}
-                        author={post.node.post_author}
-                        category={post.node.post_category}
-                        title={post.node.post_title}
-                        date={post.node.post_date}
-                        description={post.node.post_preview_description}
-                        uid={post.node._meta.uid}
-                    />
-                ))}
-            </BlogGrid>
-        </Layout>
-    </>
+const Blog = ({ posts, meta, pageContext }) => (
+  <>
+    <Helmet
+      title="Blog | The Dveloper"
+      titleTemplate="%s | Blog | The Dveloper"
+      meta={[
+        {
+          name: 'description',
+          content: meta.description,
+        },
+        {
+          property: 'og:title',
+          content: 'Blog | The Dveloper',
+        },
+        {
+          property: 'og:description',
+          content: meta.description,
+        },
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        {
+          name: 'twitter:card',
+          content: 'summary',
+        },
+        {
+          name: 'twitter:creator',
+          content: meta.author,
+        },
+        {
+          name: 'twitter:title',
+          content: meta.title,
+        },
+        {
+          name: 'twitter:description',
+          content: meta.description,
+        },
+      ].concat(meta)}
+    />
+    <Layout pageContext={pageContext}>
+      <BlogTitle>
+        Blog
+      </BlogTitle>
+      <BlogGrid>
+        {posts.map((post) => (
+          <PostCard
+            key={post.node._meta.uid}
+            author={post.node.post_author}
+            category={post.node.post_category}
+            title={post.node.post_title}
+            date={post.node.post_date}
+            description={post.node.post_preview_description}
+            uid={post.node._meta.uid}
+            lang={post.node._meta.lang}
+          />
+        ))}
+      </BlogGrid>
+    </Layout>
+  </>
 );
 
-export default ({ data }) => {
-    const posts = data.prismic.allPosts.edges;
-    const meta = data.site.siteMetadata;
-    if (!posts) return null;
+const blogWrapper = ({ data, pageContext }) => {
+  const posts = data.prismic.allPosts.edges;
+  const meta = data.site.siteMetadata;
+  if (!posts) return null;
 
-    return (
-        <Blog posts={posts} meta={meta}/>
-    )
-}
+  return (
+    <Blog posts={posts} meta={meta} pageContext={pageContext} />
+  );
+};
+
+blogWrapper.propTypes = {
+  data: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export default blogWrapper;
 
 Blog.propTypes = {
-    posts: PropTypes.array.isRequired,
-    meta: PropTypes.object.isRequired,
+  posts: PropTypes.array.isRequired,
+  meta: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 
 export const query = graphql`
-    {
+    query BlogQuery($lang: String! = "en-us") {
         prismic {
-            allPosts(sortBy: post_date_DESC) {
+            allPosts(lang: $lang, sortBy: post_date_DESC) {
                 edges {
                     node {
                         post_title
@@ -117,6 +130,7 @@ export const query = graphql`
                         post_author
                         _meta {
                             uid
+                            lang
                         }
                     }
                 }
@@ -130,5 +144,4 @@ export const query = graphql`
             }
         }
     }
-`
-
+`;

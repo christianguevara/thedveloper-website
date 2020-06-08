@@ -1,23 +1,27 @@
-import React from "react";
-import { Link } from "gatsby";
-import styled from "@emotion/styled";
-import colors from "./../styles/colors";
-import Logo from "./../components/_ui/Logo";
-import spooch from "./../images/oscar-icon.png"
+import React from 'react';
+import styled from '@emotion/styled';
+import colors from '../styles/colors';
+import spooch from '../images/oscar-icon.png';
+import LocalizedLink from './LocalizedLink';
+import logo from '../images/logo-face-only.png';
 
-const FooterContainer = styled("div")`
-    padding-top: 3.75em;
+const FooterContainer = styled('div')`
+    padding-top: 3em;
     padding-bottom: 3em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    .FooterLogo {
+        max-width: 80px;
+    }
 
     svg {
         max-width: 50px;
     }
-`
+`;
 
-const FooterAuthor = styled("a")`
+const FooterAuthor = styled('a')`
     font-size: 0.75em;
     color: ${colors.grey700};
     display: flex;
@@ -41,23 +45,24 @@ const FooterAuthor = styled("a")`
         from {transform: rotate(0deg);}
         to {transform: rotate(360deg);}
     }
-`
+`;
 
-const FooterSpooch = styled("img")`
+const FooterSpooch = styled('img')`
     max-width: 33px;
     margin-top: 0.25em;
-`
+`;
 
 const Footer = () => (
-    <FooterContainer>
-        <Link to="/">
-            <Logo />
-        </Link>
-        <FooterAuthor href="https://marguerite.io">
-            © 2019 — Designed & developed by Marguerite Roth
-            <FooterSpooch className="FooterSpooch" src={spooch} />
-        </FooterAuthor>
-    </FooterContainer>
-)
+  <FooterContainer>
+    <LocalizedLink to="/">
+      <img src={logo} className="FooterLogo" alt="The Dveloper logo" />
+      {/* <Logo /> */}
+    </LocalizedLink>
+    <FooterAuthor href="https://marguerite.io">
+      © 2020 — Base template by Marguerite Roth
+      <FooterSpooch className="FooterSpooch" src={spooch} />
+    </FooterAuthor>
+  </FooterContainer>
+);
 
 export default Footer;
