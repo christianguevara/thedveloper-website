@@ -71,7 +71,7 @@ module.exports = {
           {
             type: 'Project',
             match: '/:lang?/work/',
-            path: '/work',
+            previewPath: '/work',
             component: require.resolve('./src/pages/work.js'),
             // sortBy: 'date_ASC',
             langs: ['en-us', 'es-ec'],
@@ -80,7 +80,7 @@ module.exports = {
           {
             type: 'Project',
             match: '/:lang?/project/:uid',
-            path: '/project',
+            previewPath: '/project',
             component: require.resolve('./src/templates/project.jsx'),
             // sortBy: 'date_ASC',
             langs: ['en-us', 'es-ec'],
@@ -88,7 +88,7 @@ module.exports = {
           {
             type: 'Post',
             match: '/:lang?/blog/',
-            path: '/blog',
+            previewPath: '/blog',
             component: require.resolve('./src/pages/blog.js'),
             // sortBy: 'date_ASC',
             langs: ['en-us', 'es-ec'],
@@ -96,7 +96,7 @@ module.exports = {
           {
             type: 'Post',
             match: '/:lang?/blog/:uid',
-            path: '/post',
+            previewPath: '/post',
             component: require.resolve('./src/templates/post.jsx'),
             // sortBy: 'date_ASC',
             langs: ['en-us', 'es-ec'],

@@ -117,7 +117,10 @@ const Project = ({ project, meta }) => {
 };
 
 const projectWrapper = ({ data, pageContext }) => {
-  const projectContent = data.prismic.allProjects.edges[0].node;
+  const prismicContent = data.prismic.allProjects.edges[0];
+  if (!prismicContent) return null;
+
+  const projectContent = prismicContent.node;
   const meta = data.site.siteMetadata;
   return (
     <Layout pageContext={pageContext}>

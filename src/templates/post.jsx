@@ -147,12 +147,12 @@ const Post = ({ post, meta }) => (
       </PostDate>
     </PostMetas>
     {post.post_hero_image && (
-    <PostHeroContainer>
-      <img src={post.post_hero_image.url} alt="bees" />
-      <PostHeroAnnotation>
-        {RichText.render(post.post_hero_annotation)}
-      </PostHeroAnnotation>
-    </PostHeroContainer>
+      <PostHeroContainer>
+        <img src={post.post_hero_image.url} alt="bees" />
+        <PostHeroAnnotation>
+          {RichText.render(post.post_hero_annotation)}
+        </PostHeroAnnotation>
+      </PostHeroContainer>
     )}
     <PostBody>
       {RichText.render(post.post_body)}
@@ -162,7 +162,10 @@ const Post = ({ post, meta }) => (
 
 
 const postWrapper = ({ data, pageContext }) => {
-  const postContent = data.prismic.allPosts.edges[0].node;
+  const prismicContent = data.prismic.allPosts.edges[0];
+  if (!prismicContent) return null;
+
+  const postContent = prismicContent.node;
   const meta = data.site.siteMetadata;
   return (
     <Layout pageContext={pageContext}>
