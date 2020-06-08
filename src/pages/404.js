@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Layout } from '../components/Layout';
 
-const NotFoundPage = () => (
-  <Layout>
+const NotFoundPage = ({ pageContext }) => (
+  <Layout pageContext={pageContext}>
     <h1>
       NOT FOUND
     </h1>
@@ -11,5 +12,12 @@ const NotFoundPage = () => (
     </p>
   </Layout>
 );
+
+
+NotFoundPage.propTypes = {
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default NotFoundPage;
