@@ -146,7 +146,6 @@ const RenderBody = ({ home, projects, meta }) => {
         </RichTextWrapper>
         <a
           href={home.hero_button_link.url}
-          target="_blank"
           rel="noopener noreferrer"
         >
           <Button>
