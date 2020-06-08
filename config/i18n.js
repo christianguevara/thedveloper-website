@@ -11,15 +11,6 @@ const config = {
     defaultTitleAlt: website.titleAlt,
     defaultDescription: website.description,
     headline: website.headline,
-    category: 'Category',
-    categories: 'Categories',
-    was: 'was',
-    were: 'were',
-    tagged: 'tagged with',
-    recent: 'Recent',
-    projects: 'projects',
-    allCategories: 'All categories',
-    entries: 'entries',
 
     // Pages
     // Home
@@ -41,20 +32,19 @@ const config = {
     ogLang: 'es_EC',
     defaultTitle: website.title,
     defaultTitleAlt: website.titleAlt,
-    defaultDescription: 'Basierend auf gatsby-starter-prismic mit Unterstützung für Lokalisierung (i18n)',
-    headline: 'Schreiben und Veröffentlichen für LekoArts',
-    category: 'Kategorie',
-    categories: 'Kategorien',
-    was: 'wurde',
-    were: 'wurden',
-    tagged: 'markiert mit',
-    recent: 'Neue',
-    projects: 'Projekte',
-    allCategories: 'Alle Kategorien',
-    entries: 'Einträge',
+    defaultDescription: 'Sitio web personal para mostrar el portfolio de trabajo + blog de Christian Guevara , bienvenidos :)',
+    headline: 'Alguna cosa mientras SEO es implementado',
 
+    // Pages
+    // Home
+    emailMe: 'Envíame un email',
     projectDetails: 'Detalles',
     moreWork: 'Ver más proyectos',
+    blogTitle: 'Blog | The Dveloper',
+    blogTitleOg: 'Blog | The Dveloper',
+
+    // Poject detail
+    moreProjects: 'Ver otros proyectos',
   },
 };
 
