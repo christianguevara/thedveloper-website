@@ -6,7 +6,7 @@ import { graphql } from 'gatsby';
 import { RichText } from 'prismic-reactjs';
 import styled from '@emotion/styled';
 import colors from '../styles/colors';
-import Layout from '../components/Layout';
+import { Layout } from '../components/Layout';
 
 const PostHeroContainer = styled('div')`
     max-height: 500px;
@@ -132,46 +132,50 @@ const Post = ({ post, meta }) => (
         },
       ].concat(meta)}
     />
-    <Layout>
-      <PostCategory>
-        {RichText.render(post.post_category)}
-      </PostCategory>
-      <PostTitle>
-        {RichText.render(post.post_title)}
-      </PostTitle>
-      <PostMetas>
-        <PostAuthor>
-          {post.post_author}
-        </PostAuthor>
-        <PostDate>
-          <Moment format="MMMM D, YYYY">{post.post_date}</Moment>
-        </PostDate>
-      </PostMetas>
-      {post.post_hero_image && (
-        <PostHeroContainer>
-          <img src={post.post_hero_image.url} alt="bees" />
-          <PostHeroAnnotation>
-            {RichText.render(post.post_hero_annotation)}
-          </PostHeroAnnotation>
-        </PostHeroContainer>
-      )}
-      <PostBody>
-        {RichText.render(post.post_body)}
-      </PostBody>
-    </Layout>
+    <PostCategory>
+      {RichText.render(post.post_category)}
+    </PostCategory>
+    <PostTitle>
+      {RichText.render(post.post_title)}
+    </PostTitle>
+    <PostMetas>
+      <PostAuthor>
+        {post.post_author}
+      </PostAuthor>
+      <PostDate>
+        <Moment format="MMMM D, YYYY">{post.post_date}</Moment>
+      </PostDate>
+    </PostMetas>
+    {post.post_hero_image && (
+    <PostHeroContainer>
+      <img src={post.post_hero_image.url} alt="bees" />
+      <PostHeroAnnotation>
+        {RichText.render(post.post_hero_annotation)}
+      </PostHeroAnnotation>
+    </PostHeroContainer>
+    )}
+    <PostBody>
+      {RichText.render(post.post_body)}
+    </PostBody>
   </>
 );
 
-const postWrapper = ({ data }) => {
+
+const postWrapper = ({ data, pageContext }) => {
   const postContent = data.prismic.allPosts.edges[0].node;
   const meta = data.site.siteMetadata;
   return (
-    <Post post={postContent} meta={meta} />
+    <Layout pageContext={pageContext}>
+      <Post post={postContent} meta={meta} />
+    </Layout>
   );
 };
 
 postWrapper.propTypes = {
   data: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default postWrapper;
@@ -209,6 +213,7 @@ export const query = graphql`
                         post_preview_description
                         _meta {
                             uid
+                            lang
                         }
                     }
                 }

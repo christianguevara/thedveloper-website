@@ -1,6 +1,7 @@
 module.exports = {
   env: {
     browser: true,
+    node: true,
     es6: true,
   },
   extends: [
@@ -14,6 +15,7 @@ module.exports = {
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
+      impliedStrict: true,
     },
     ecmaVersion: 2018,
     sourceType: 'module',

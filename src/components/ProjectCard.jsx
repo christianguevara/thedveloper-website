@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'gatsby';
 import { RichText } from 'prismic-reactjs';
 import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import dimensions from '../styles/dimensions';
 import colors from '../styles/colors';
+import LocalizedLink from './LocalizedLink';
+import { LocaleContext } from './Layout';
 
-const ProjectCardContainer = styled(Link)`
+const ProjectCardContainer = styled(LocalizedLink)`
     display: grid;
     grid-template-columns: 4fr 7fr;
     box-shadow: 0px 9px 24px rgba(0, 0, 0, 0.06);
@@ -159,29 +160,34 @@ const ProjectCardImageContainer = styled('div')`
 
 const ProjectCard = ({
   category, title, description, thumbnail, uid,
-}) => (
-  <ProjectCardContainer to={`/work/${uid}`}>
-    <ProjectCardContent className="ProjectCardContent">
-      <ProjectCardCategory>
-        {category[0].text}
-      </ProjectCardCategory>
-      <ProjectCardTitle>
-        {title[0].text}
-      </ProjectCardTitle>
-      <ProjectCardBlurb>
-        {RichText.render(description)}
-      </ProjectCardBlurb>
-      <ProjectCardAction className="ProjectCardAction">
-        Details
-        {' '}
-        <span>&#8594;</span>
-      </ProjectCardAction>
-    </ProjectCardContent>
-    <ProjectCardImageContainer className="ProjectCardImageContainer">
-      <img src={thumbnail.url} alt={title[0].text} />
-    </ProjectCardImageContainer>
-  </ProjectCardContainer>
-);
+}) => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
+
+  return (
+    <ProjectCardContainer to={`/project/${uid}`}>
+      <ProjectCardContent className="ProjectCardContent">
+        <ProjectCardCategory>
+          {category[0].text}
+        </ProjectCardCategory>
+        <ProjectCardTitle>
+          {title[0].text}
+        </ProjectCardTitle>
+        <ProjectCardBlurb>
+          {RichText.render(description)}
+        </ProjectCardBlurb>
+        <ProjectCardAction className="ProjectCardAction">
+          {i18n.projectDetails}
+          {' '}
+          <span>&#8594;</span>
+        </ProjectCardAction>
+      </ProjectCardContent>
+      <ProjectCardImageContainer className="ProjectCardImageContainer">
+        <img src={thumbnail.url} alt={title[0].text} />
+      </ProjectCardImageContainer>
+    </ProjectCardContainer>
+  );
+};
 
 export default ProjectCard;
 

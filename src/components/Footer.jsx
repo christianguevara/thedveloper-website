@@ -1,16 +1,20 @@
 import React from 'react';
-import { Link } from 'gatsby';
 import styled from '@emotion/styled';
 import colors from '../styles/colors';
-import Logo from './_ui/Logo';
 import spooch from '../images/oscar-icon.png';
+import LocalizedLink from './LocalizedLink';
+import logo from '../images/logo-face-only.png';
 
 const FooterContainer = styled('div')`
-    padding-top: 3.75em;
+    padding-top: 3em;
     padding-bottom: 3em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    .FooterLogo {
+        max-width: 80px;
+    }
 
     svg {
         max-width: 50px;
@@ -50,11 +54,12 @@ const FooterSpooch = styled('img')`
 
 const Footer = () => (
   <FooterContainer>
-    <Link to="/">
-      <Logo />
-    </Link>
+    <LocalizedLink to="/">
+      <img src={logo} className="FooterLogo" alt="The Dveloper logo" />
+      {/* <Logo /> */}
+    </LocalizedLink>
     <FooterAuthor href="https://marguerite.io">
-      © 2019 — Designed & developed by Marguerite Roth
+      © 2020 — Base template by Marguerite Roth
       <FooterSpooch className="FooterSpooch" src={spooch} />
     </FooterAuthor>
   </FooterContainer>

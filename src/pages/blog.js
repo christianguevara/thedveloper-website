@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import { graphql } from 'gatsby';
 import styled from '@emotion/styled';
 import dimensions from '../styles/dimensions';
-import Layout from '../components/Layout';
+import { Layout } from '../components/Layout';
 import PostCard from '../components/PostCard';
 
 const BlogTitle = styled('h1')`
@@ -27,11 +27,11 @@ const BlogGrid = styled('div')`
     }
 `;
 
-const Blog = ({ posts, meta }) => (
+const Blog = ({ posts, meta, pageContext }) => (
   <>
     <Helmet
-      title="Blog | Prist, Gatsby & Prismic Starter"
-      titleTemplate="%s | Blog | Prist, Gatsby & Prismic Starter"
+      title="Blog | The Dveloper"
+      titleTemplate="%s | Blog | The Dveloper"
       meta={[
         {
           name: 'description',
@@ -39,7 +39,7 @@ const Blog = ({ posts, meta }) => (
         },
         {
           property: 'og:title',
-          content: 'Blog | Prist, Gatsby & Prismic Starter',
+          content: 'Blog | The Dveloper',
         },
         {
           property: 'og:description',
@@ -67,7 +67,7 @@ const Blog = ({ posts, meta }) => (
         },
       ].concat(meta)}
     />
-    <Layout>
+    <Layout pageContext={pageContext}>
       <BlogTitle>
         Blog
       </BlogTitle>
@@ -81,6 +81,7 @@ const Blog = ({ posts, meta }) => (
             date={post.node.post_date}
             description={post.node.post_preview_description}
             uid={post.node._meta.uid}
+            lang={post.node._meta.lang}
           />
         ))}
       </BlogGrid>
@@ -88,18 +89,21 @@ const Blog = ({ posts, meta }) => (
   </>
 );
 
-const blogWrapper = ({ data }) => {
+const blogWrapper = ({ data, pageContext }) => {
   const posts = data.prismic.allPosts.edges;
   const meta = data.site.siteMetadata;
   if (!posts) return null;
 
   return (
-    <Blog posts={posts} meta={meta} />
+    <Blog posts={posts} meta={meta} pageContext={pageContext} />
   );
 };
 
 blogWrapper.propTypes = {
   data: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default blogWrapper;
@@ -107,13 +111,16 @@ export default blogWrapper;
 Blog.propTypes = {
   posts: PropTypes.array.isRequired,
   meta: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 
 export const query = graphql`
-    {
+    query BlogQuery($lang: String! = "en-us") {
         prismic {
-            allPosts(sortBy: post_date_DESC) {
+            allPosts(lang: $lang, sortBy: post_date_DESC) {
                 edges {
                     node {
                         post_title
@@ -123,6 +130,7 @@ export const query = graphql`
                         post_author
                         _meta {
                             uid
+                            lang
                         }
                     }
                 }

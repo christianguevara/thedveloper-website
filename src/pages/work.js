@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { graphql } from 'gatsby';
 import styled from '@emotion/styled';
-import Layout from '../components/Layout';
+import { Layout } from '../components/Layout';
 import ProjectCard from '../components/ProjectCard';
 
 const WorkTitle = styled('h1')`
     margin-bottom: 1em;
 `;
 
-const Work = ({ projects, meta }) => (
+const Work = ({ projects, meta, pageContext }) => (
   <>
     <Helmet
       title="Work | Prist, Gatsby & Prismic Starter"
@@ -50,7 +50,7 @@ const Work = ({ projects, meta }) => (
         },
       ].concat(meta)}
     />
-    <Layout>
+    <Layout pageContext={pageContext}>
       <WorkTitle>
         Work
       </WorkTitle>
@@ -70,18 +70,21 @@ const Work = ({ projects, meta }) => (
   </>
 );
 
-const workWrapper = ({ data }) => {
+const workWrapper = ({ data, pageContext }) => {
   const projects = data.prismic.allProjects.edges;
   const meta = data.site.siteMetadata;
   if (!projects) return null;
 
   return (
-    <Work projects={projects} meta={meta} />
+    <Work projects={projects} meta={meta} pageContext={pageContext} />
   );
 };
 
 workWrapper.propTypes = {
   data: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default workWrapper;
@@ -89,12 +92,15 @@ export default workWrapper;
 Work.propTypes = {
   projects: PropTypes.array.isRequired,
   meta: PropTypes.object.isRequired,
+  pageContext: PropTypes.shape({
+    lang: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export const query = graphql`
-    {
+    query WorkQuery($lang: String! = "en-us") {
         prismic {
-            allProjects {
+            allProjects(lang: $lang) {
                 edges {
                     node {
                         project_title
@@ -104,6 +110,7 @@ export const query = graphql`
                         project_post_date
                         _meta {
                             uid
+                            lang
                         }
                     }
                 }

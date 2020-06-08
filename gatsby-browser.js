@@ -5,6 +5,6 @@
  */
 
 // const { registerLinkResolver } = require('gatsby-source-prismic-graphql');
-// const { linkResolver } = require('./src/utils/prismic-configuration');
+// const { linkResolver } = require('./src/utils/linkResolver');
 
 // registerLinkResolver(linkResolver);

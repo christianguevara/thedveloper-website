@@ -4,10 +4,15 @@ import styled from '@emotion/styled';
 import colors from '../styles/colors';
 import dimensions from '../styles/dimensions';
 import Logo from './_ui/Logo';
+import LocalizedLink from './LocalizedLink';
 
 const HeaderContainer = styled('div')`
     padding-top: 3.75em;
     padding-bottom: 3em;
+    
+    svg, img {
+        max-width: 160px;
+    }
 `;
 
 const HeaderContent = styled('div')`
@@ -72,25 +77,44 @@ const HeaderLinks = styled('div')`
     }
 `;
 
+const LocaleSwitcher = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+`;
+
 const Header = () => (
   <HeaderContainer>
     <HeaderContent>
-      <Link to="/">
+      <LocalizedLink to="/">
         <Logo />
-      </Link>
+      </LocalizedLink>
       <HeaderLinks>
-        <Link
+        <LocalizedLink
           activeClassName="Link--is-active"
           to="/work"
         >
           Work
-        </Link>
-        <Link
+        </LocalizedLink>
+        <LocalizedLink
           activeClassName="Link--is-active"
           to="/blog"
         >
           Blog
-        </Link>
+        </LocalizedLink>
+
+        <LocaleSwitcher data-name="locale-switcher">
+          <Link hrefLang="en-us" to="/" activeClassName="Link--is-active">
+            EN
+          </Link>
+          {/* {' '} */}
+          {/* / */}
+          {/* {' '} */}
+          <Link hrefLang="es-ec" to="/es" activeClassName="Link--is-active">
+            ES
+          </Link>
+        </LocaleSwitcher>
       </HeaderLinks>
     </HeaderContent>
   </HeaderContainer>

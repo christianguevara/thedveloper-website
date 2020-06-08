@@ -4,6 +4,7 @@ import { RichText } from 'prismic-reactjs';
 import PropTypes from 'prop-types';
 import dimensions from '../styles/dimensions';
 import Button from './_ui/Button';
+import { LocaleContext } from './Layout';
 
 const AboutContainer = styled('div')`
     padding-top: 1em;
@@ -80,33 +81,38 @@ const AboutActions = styled('div')`
 `;
 
 
-const About = ({ bio, socialLinks }) => (
-  <AboutContainer>
-    <AboutLinkContainer>
-      {socialLinks.map((social) => (
-        <AboutLink
-          key={social.about_link[0].spans[0].data.url}
-          href={social.about_link[0].spans[0].data.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {social.about_link[0].text}
-          <span>&#8594;</span>
-        </AboutLink>
-      ))}
-    </AboutLinkContainer>
-    <AboutBio>
-      {RichText.render(bio)}
-    </AboutBio>
-    <AboutActions>
-      <a href="mailto:marguerite.roth@gmail.com" target="_blank" rel="noopener noreferrer">
-        <Button className="Button--secondary">
-          Email me
-        </Button>
-      </a>
-    </AboutActions>
-  </AboutContainer>
-);
+const About = ({ bio, socialLinks }) => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
+
+  return (
+    <AboutContainer>
+      <AboutLinkContainer>
+        {socialLinks.map((social) => (
+          <AboutLink
+            key={social.about_link[0].spans[0].data.url}
+            href={social.about_link[0].spans[0].data.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {social.about_link[0].text}
+            <span>&#8594;</span>
+          </AboutLink>
+        ))}
+      </AboutLinkContainer>
+      <AboutBio>
+        {RichText.render(bio)}
+      </AboutBio>
+      <AboutActions>
+        <a href="mailto:christian@thedveloper.com" target="_blank" rel="noopener noreferrer">
+          <Button className="Button--secondary">
+            {i18n.emailMe}
+          </Button>
+        </a>
+      </AboutActions>
+    </AboutContainer>
+  );
+};
 
 export default About;
 
