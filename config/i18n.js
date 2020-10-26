@@ -20,7 +20,10 @@ const config = {
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 
-    // Poject detail
+    // Project page
+    workTitle: 'Work',
+
+    // Project detail
     moreProjects: 'See other work',
 
 
@@ -43,7 +46,10 @@ const config = {
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 
-    // Poject detail
+    // Project page
+    workTitle: 'Mis proyectos',
+
+    // Project detail
     moreProjects: 'Ver otros proyectos',
   },
 };

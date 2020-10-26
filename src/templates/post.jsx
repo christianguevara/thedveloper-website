@@ -95,7 +95,7 @@ const PostDate = styled('div')`
 const Post = ({ post, meta }) => (
   <>
     <Helmet
-      title={`${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`}
+      title={`${post.post_title[0].text}`}
       titleTemplate={`%s | ${meta.title}`}
       meta={[
         {
@@ -104,7 +104,7 @@ const Post = ({ post, meta }) => (
         },
         {
           property: 'og:title',
-          content: `${post.post_title[0].text} | Prist, Gatsby & Prismic Starter`,
+          content: `${post.post_title[0].text} | ${meta.title}`,
         },
         {
           property: 'og:description',

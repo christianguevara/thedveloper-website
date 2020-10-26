@@ -81,7 +81,6 @@ const Blog = ({ posts, meta, pageContext }) => (
             date={post.node.post_date}
             description={post.node.post_preview_description}
             uid={post.node._meta.uid}
-            lang={post.node._meta.lang}
           />
         ))}
       </BlogGrid>

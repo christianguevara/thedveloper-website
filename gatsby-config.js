@@ -95,7 +95,7 @@ module.exports = {
           },
           {
             type: 'Post',
-            match: '/:lang?/blog/:uid',
+            match: '/:lang?/post/:uid',
             previewPath: '/post',
             component: require.resolve('./src/templates/post.jsx'),
             // sortBy: 'date_ASC',
