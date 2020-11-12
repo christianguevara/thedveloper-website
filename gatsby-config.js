@@ -50,7 +50,7 @@ module.exports = {
       options: {
         repositoryName: `${process.env.PRISMIC_REPOSITORY_NAME}`, // (REQUIRED, replace with your own)
         defaultLang,
-        langs: ['en-us', 'es-ec'],
+        langs: ['es-ec', 'en-us'],
         accessToken: `${process.env.PRISMIC_ACCESS_TOKEN}`,
         // Get the correct URLs in blog posts
         linkResolver: () => prismicLinkResolver,
@@ -66,7 +66,7 @@ module.exports = {
             previewPath: '/',
             component: require.resolve('./src/pages/index.js'),
             // sortBy: 'date_ASC',
-            langs: ['en-us', 'es-ec'],
+            langs: ['es-ec', 'en-us'],
           },
           {
             type: 'Project',
@@ -74,8 +74,7 @@ module.exports = {
             previewPath: '/work',
             component: require.resolve('./src/pages/work.js'),
             // sortBy: 'date_ASC',
-            langs: ['en-us', 'es-ec'],
-
+            langs: ['es-ec', 'en-us'],
           },
           {
             type: 'Project',
@@ -83,7 +82,7 @@ module.exports = {
             previewPath: '/project',
             component: require.resolve('./src/templates/project.jsx'),
             // sortBy: 'date_ASC',
-            langs: ['en-us', 'es-ec'],
+            langs: ['es-ec', 'en-us'],
           },
           {
             type: 'Post',
@@ -91,7 +90,7 @@ module.exports = {
             previewPath: '/blog',
             component: require.resolve('./src/pages/blog.js'),
             // sortBy: 'date_ASC',
-            langs: ['en-us', 'es-ec'],
+            langs: ['es-ec', 'en-us'],
           },
           {
             type: 'Post',
@@ -99,7 +98,7 @@ module.exports = {
             previewPath: '/post',
             component: require.resolve('./src/templates/post.jsx'),
             // sortBy: 'date_ASC',
-            langs: ['en-us', 'es-ec'],
+            langs: ['es-ec', 'en-us'],
           },
         ],
         // linkResolver: () => (post) => `/${post.uid}`,

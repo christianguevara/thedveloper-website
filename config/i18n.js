@@ -2,7 +2,7 @@ const website = require('./website');
 
 const config = {
   'en-us': {
-    default: true,
+    default: false,
     path: 'en',
     locale: 'en-us',
     siteLanguage: 'en',
@@ -29,6 +29,7 @@ const config = {
 
   },
   'es-ec': {
+    default: true,
     path: 'es',
     locale: 'es-ec',
     siteLanguage: 'es',

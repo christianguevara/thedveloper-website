@@ -104,20 +104,31 @@ const Header = () => (
           Blog
         </LocalizedLink>
 
-        <LocaleSwitcher data-name="locale-switcher">
-          <Link hrefLang="en-us" to="/" activeClassName="Link--is-active">
-            EN
-          </Link>
-          {/* {' '} */}
-          {/* / */}
-          {/* {' '} */}
-          <Link hrefLang="es-ec" to="/es" activeClassName="Link--is-active">
-            ES
-          </Link>
-        </LocaleSwitcher>
       </HeaderLinks>
     </HeaderContent>
   </HeaderContainer>
 );
+          <LocaleSwitcher data-name="locale-switcher">
+            <Link
+              hrefLang="en-us"
+              lang="en-us"
+              to="/en"
+              activeClassName="Link--is-active"
+              partiallyActive
+            >
+              EN
+            </Link>
+            {/* {' '} */}
+            {/* / */}
+            {/* {' '} */}
+            <Link
+              hrefLang="es-ec"
+              lang="es-ec"
+              to="/"
+              activeClassName="Link--is-active"
+            >
+              ES
+            </Link>
+          </LocaleSwitcher>
 
 export default Header;

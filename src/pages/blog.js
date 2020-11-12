@@ -117,7 +117,7 @@ Blog.propTypes = {
 
 
 export const query = graphql`
-    query BlogQuery($lang: String! = "en-us") {
+    query BlogQuery($lang: String! = "es-ec") {
         prismic {
             allPosts(lang: $lang, sortBy: post_date_DESC) {
                 edges {

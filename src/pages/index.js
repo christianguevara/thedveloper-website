@@ -214,7 +214,7 @@ RenderBody.propTypes = {
 };
 
 export const query = graphql`
-    query HomepageQuery($lang: String! = "en-us") {
+    query HomepageQuery($lang: String! = "es-ec") {
         prismic {
             allHomepages(lang: $lang) {
                 edges {
