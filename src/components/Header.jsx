@@ -5,6 +5,7 @@ import colors from '../styles/colors';
 import dimensions from '../styles/dimensions';
 import Logo from './_ui/Logo';
 import LocalizedLink from './LocalizedLink';
+import { LocaleContext } from './Layout';
 
 const HeaderContainer = styled('div')`
     padding-top: 3.75em;
@@ -22,8 +23,8 @@ const HeaderContent = styled('div')`
 
 const HeaderLinks = styled('div')`
     display: grid;
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 7em;
+    grid-template-columns: repeat(4, auto);
+    grid-gap: 4em;
     justify-content: flex-end;
     width: 100%;
     max-width: 200px;
@@ -49,28 +50,27 @@ const HeaderLinks = styled('div')`
         position: relative;
 
         &:after {
-            position: absolute;
-            content: "";
-            bottom: 0;
-            width: 18px;
-            height: 3px;
-            background: transparent;
-            bottom: -3px;
-            right: 50%;
-            margin-right: -9px;
-            transition: 100ms ease-in-out background;
+          position: absolute;
+          content: "";
+          width: 18px;
+          height: 3px;
+          background: transparent;
+          bottom: 1em;
+          right: 50%;
+          margin-right: -9px;
+          transition: 100ms ease-in-out background;
         }
 
         &:hover {
             &:after {
-                background: ${colors.blue500};
+                background: ${colors.orange500};
                 transition: 100ms ease-in-out background;
             }
         }
 
         &.Link--is-active {
             &:after {
-                background: ${colors.blue500};
+                background: ${colors.orange500};
                 transition: 100ms ease-in-out background;
             }
         }
@@ -78,36 +78,33 @@ const HeaderLinks = styled('div')`
 `;
 
 const LocaleSwitcher = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 1rem;
+  text-align: center;
 `;
 
-const Header = () => (
-  <HeaderContainer>
-    <HeaderContent>
-      <LocalizedLink to="/">
-        <Logo />
-      </LocalizedLink>
-      <HeaderLinks>
-        <LocalizedLink
-          activeClassName="Link--is-active"
-          to="/work"
-        >
-          Work
-        </LocalizedLink>
-        <LocalizedLink
-          activeClassName="Link--is-active"
-          to="/blog"
-        >
-          Blog
-        </LocalizedLink>
+const Header = () => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
 
-      </HeaderLinks>
-    </HeaderContent>
-  </HeaderContainer>
-);
+  return (
+    <HeaderContainer>
+      <HeaderContent>
+        <LocalizedLink to="/">
+          <Logo />
+        </LocalizedLink>
+        <HeaderLinks>
+          <LocalizedLink
+            activeClassName="Link--is-active"
+            to="/work"
+          >
+            {i18n.workMenu}
+          </LocalizedLink>
+          <LocalizedLink
+            activeClassName="Link--is-active"
+            to="/blog"
+          >
+            Blog
+          </LocalizedLink>
+
           <LocaleSwitcher data-name="locale-switcher">
             <Link
               hrefLang="en-us"
@@ -130,5 +127,10 @@ const Header = () => (
               ES
             </Link>
           </LocaleSwitcher>
+        </HeaderLinks>
+      </HeaderContent>
+    </HeaderContainer>
+  );
+};
 
 export default Header;

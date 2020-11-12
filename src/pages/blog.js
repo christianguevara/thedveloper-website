@@ -30,8 +30,8 @@ const BlogGrid = styled('div')`
 const Blog = ({ posts, meta, pageContext }) => (
   <>
     <Helmet
-      title="Blog | The Dveloper"
-      titleTemplate="%s | Blog | The Dveloper"
+      title="Blog"
+      titleTemplate="%s | The Dveloper"
       meta={[
         {
           name: 'description',

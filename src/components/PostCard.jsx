@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import colors from '../styles/colors';
 import LocalizedLink from './LocalizedLink';
+import { LocaleContext } from './Layout';
 
 const PostCardContainer = styled(LocalizedLink)`
     border: 1px solid ${colors.grey200};
@@ -87,32 +88,37 @@ const PostCardAction = styled('div')`
 
 const PostCard = ({
   author, category, date, title, description, uid,
-}) => (
-  <PostCardContainer className="BlogPostCard" to={`/post/${uid}`}>
-    <PostCategory>
-      {category[0].text}
-    </PostCategory>
-    <PostTitle>
-      {title[0].text}
-    </PostTitle>
-    <PostDescription>
-      {RichText.render(description)}
-    </PostDescription>
-    <PostCardAction className="PostCardAction">
-      Read more
-      {' '}
-      <span>&#8594;</span>
-    </PostCardAction>
-    <PostMetas>
-      <PostAuthor>
-        {author}
-      </PostAuthor>
-      <PostDate>
-        <Moment format="MMMM D, YYYY">{date}</Moment>
-      </PostDate>
-    </PostMetas>
-  </PostCardContainer>
-);
+}) => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
+
+  return (
+    <PostCardContainer className="BlogPostCard" to={`/post/${uid}`}>
+      <PostCategory>
+        {category[0].text}
+      </PostCategory>
+      <PostTitle>
+        {title[0].text}
+      </PostTitle>
+      <PostDescription>
+        {RichText.render(description)}
+      </PostDescription>
+      <PostCardAction className="PostCardAction">
+        {i18n.readMore}
+        {' '}
+        <span>&#8594;</span>
+      </PostCardAction>
+      <PostMetas>
+        <PostAuthor>
+          {author}
+        </PostAuthor>
+        <PostDate>
+          <Moment format="LL" locale={i18n.locale} date={date} />
+        </PostDate>
+      </PostMetas>
+    </PostCardContainer>
+  );
+};
 
 export default PostCard;
 

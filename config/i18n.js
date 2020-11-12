@@ -17,6 +17,8 @@ const config = {
     emailMe: 'Email me',
     projectDetails: 'Details',
     moreWork: 'See more work',
+    workMenu: 'Work',
+    readMore: 'Read more',
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 
@@ -43,7 +45,9 @@ const config = {
     // Home
     emailMe: 'Envíame un email',
     projectDetails: 'Detalles',
+    readMore: 'Leer más',
     moreWork: 'Ver más proyectos',
+    workMenu: 'Proyectos',
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 
