@@ -25,13 +25,13 @@ const ProjectHeroContainer = styled('div')`
 `;
 
 const ProjectTitle = styled('div')`
-    max-width: 550px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
 `;
 
 const ProjectBody = styled('div')`
-    max-width: 550px;
+    max-width: 700px;
     margin: 0 auto;
 
     .block-img {
@@ -101,7 +101,7 @@ const Project = ({ project, meta }) => {
       </ProjectTitle>
       {project.project_hero_image && (
         <ProjectHeroContainer>
-          <img src={project.project_hero_image.url} alt="bees" />
+          <img src={project.project_hero_image.url} alt={project.project_hero_image.alt} />
         </ProjectHeroContainer>
       )}
       <ProjectBody>

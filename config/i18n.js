@@ -2,7 +2,7 @@ const website = require('./website');
 
 const config = {
   'en-us': {
-    default: true,
+    default: false,
     path: 'en',
     locale: 'en-us',
     siteLanguage: 'en',
@@ -17,6 +17,8 @@ const config = {
     emailMe: 'Email me',
     projectDetails: 'Details',
     moreWork: 'See more work',
+    workMenu: 'Work',
+    readMore: 'Read more',
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 
@@ -29,6 +31,7 @@ const config = {
 
   },
   'es-ec': {
+    default: true,
     path: 'es',
     locale: 'es-ec',
     siteLanguage: 'es',
@@ -42,7 +45,9 @@ const config = {
     // Home
     emailMe: 'Envíame un email',
     projectDetails: 'Detalles',
+    readMore: 'Leer más',
     moreWork: 'Ver más proyectos',
+    workMenu: 'Proyectos',
     blogTitle: 'Blog | The Dveloper',
     blogTitleOg: 'Blog | The Dveloper',
 

@@ -26,7 +26,7 @@ const Work = ({ projects, meta }) => {
           },
           {
             property: 'og:title',
-            content: 'Work | Prist, Gatsby & Prismic Starter',
+            content: 'Work | The Developer',
           },
           {
             property: 'og:description',
@@ -100,7 +100,7 @@ Work.propTypes = {
 };
 
 export const query = graphql`
-    query WorkQuery($lang: String! = "en-us") {
+    query WorkQuery($lang: String! = "es-ec") {
         prismic {
             allProjects(lang: $lang) {
                 edges {

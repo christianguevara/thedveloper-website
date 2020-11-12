@@ -6,7 +6,7 @@ import { graphql } from 'gatsby';
 import { RichText } from 'prismic-reactjs';
 import styled from '@emotion/styled';
 import colors from '../styles/colors';
-import { Layout } from '../components/Layout';
+import { Layout, LocaleContext } from '../components/Layout';
 
 const PostHeroContainer = styled('div')`
     max-height: 500px;
@@ -37,7 +37,7 @@ const PostHeroAnnotation = styled('div')`
 `;
 
 const PostCategory = styled('div')`
-    max-width: 550px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
     font-weight: 600;
@@ -50,7 +50,7 @@ const PostCategory = styled('div')`
 `;
 
 const PostTitle = styled('div')`
-    max-width: 550px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
 
@@ -60,25 +60,33 @@ const PostTitle = styled('div')`
 `;
 
 const PostBody = styled('div')`
-    max-width: 550px;
-    margin: 0 auto;
+  max-width: 700px;
+  margin: 0 auto;
 
-    .block-img {
-        margin-top: 3.5em;
-        margin-bottom: 0.5em;
+  .block-img {
+    margin-top: 3.5em;
+    margin-bottom: 0.5em;
 
-        img {
-            width: 100%;
-        }
+    img {
+        max-width: 100%;
     }
+  }
+  
+  pre {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    white-space: pre-wrap;
+    background: #1C262B;
+    color: white;
+    padding: 0.2em 0.2em 0.2em 1em;
+    border-radius: 0.2em;
+  }
 `;
 
 const PostMetas = styled('div')`
-    max-width: 550px;
-    margin: 0 auto;
+    max-width: 700px;
     display: flex;
     align-items: center;
-    margin-bottom: 2em;
+    margin: 0 auto 2em;
     justify-content: space-between;
     font-size: 0.85em;
     color: ${colors.grey600};
@@ -92,73 +100,86 @@ const PostDate = styled('div')`
     margin: 0;
 `;
 
-const Post = ({ post, meta }) => (
-  <>
-    <Helmet
-      title={`${post.post_title[0].text}`}
-      titleTemplate={`%s | ${meta.title}`}
-      meta={[
-        {
-          name: 'description',
-          content: meta.description,
-        },
-        {
-          property: 'og:title',
-          content: `${post.post_title[0].text} | ${meta.title}`,
-        },
-        {
-          property: 'og:description',
-          content: meta.description,
-        },
-        {
-          property: 'og:type',
-          content: 'website',
-        },
-        {
-          name: 'twitter:card',
-          content: 'summary',
-        },
-        {
-          name: 'twitter:creator',
-          content: meta.author,
-        },
-        {
-          name: 'twitter:title',
-          content: meta.title,
-        },
-        {
-          name: 'twitter:description',
-          content: meta.description,
-        },
-      ].concat(meta)}
-    />
-    <PostCategory>
-      {RichText.render(post.post_category)}
-    </PostCategory>
-    <PostTitle>
-      {RichText.render(post.post_title)}
-    </PostTitle>
-    <PostMetas>
-      <PostAuthor>
-        {post.post_author}
-      </PostAuthor>
-      <PostDate>
-        <Moment format="MMMM D, YYYY">{post.post_date}</Moment>
-      </PostDate>
-    </PostMetas>
-    {post.post_hero_image && (
-      <PostHeroContainer>
-        <img src={post.post_hero_image.url} alt="bees" />
-        <PostHeroAnnotation>
-          {RichText.render(post.post_hero_annotation)}
-        </PostHeroAnnotation>
-      </PostHeroContainer>
-    )}
-    <PostBody>
-      {RichText.render(post.post_body)}
-    </PostBody>
-  </>
-);
+const Post = ({ post, meta }) => {
+  const locale = React.useContext(LocaleContext);
+  const i18n = locale.i18n[locale.lang];
+
+  return (
+    <>
+      <Helmet
+        title={`${post.post_title[0].text}`}
+        titleTemplate={`%s | ${meta.title}`}
+        meta={[
+          {
+            name: 'description',
+            content: meta.description,
+          },
+          {
+            property: 'og:title',
+            content: `${post.post_title[0].text} | ${meta.title}`,
+          },
+          {
+            property: 'og:description',
+            content: meta.description,
+          },
+          {
+            property: 'og:type',
+            content: 'website',
+          },
+          {
+            name: 'twitter:card',
+            content: 'summary',
+          },
+          {
+            name: 'twitter:creator',
+            content: meta.author,
+          },
+          {
+            name: 'twitter:title',
+            content: meta.title,
+          },
+          {
+            name: 'twitter:description',
+            content: meta.description,
+          },
+        ].concat(meta)}
+      />
+      <PostCategory>
+        <RichText
+          render={post.post_category}
+        />
+      </PostCategory>
+      <PostTitle>
+        <RichText
+          render={post.post_title}
+        />
+      </PostTitle>
+      <PostMetas>
+        <PostAuthor>
+          {post.post_author}
+        </PostAuthor>
+        <PostDate>
+          <Moment format="LL" locale={i18n.locale} date={post.post_date} />
+        </PostDate>
+      </PostMetas>
+      {post.post_hero_image && (
+        <PostHeroContainer>
+          <img src={post.post_hero_image.url} alt={post.post_hero_image.alt} />
+          <PostHeroAnnotation>
+            <RichText
+              render={post.post_hero_annotation}
+            />
+          </PostHeroAnnotation>
+        </PostHeroContainer>
+      )}
+      <PostBody>
+        <RichText
+          render={post.post_body}
+        />
+      </PostBody>
+    </>
+  );
+};
 
 
 const postWrapper = ({ data, pageContext }) => {

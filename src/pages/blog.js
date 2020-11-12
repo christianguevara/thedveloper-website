@@ -30,8 +30,8 @@ const BlogGrid = styled('div')`
 const Blog = ({ posts, meta, pageContext }) => (
   <>
     <Helmet
-      title="Blog | The Dveloper"
-      titleTemplate="%s | Blog | The Dveloper"
+      title="Blog"
+      titleTemplate="%s | The Dveloper"
       meta={[
         {
           name: 'description',
@@ -117,7 +117,7 @@ Blog.propTypes = {
 
 
 export const query = graphql`
-    query BlogQuery($lang: String! = "en-us") {
+    query BlogQuery($lang: String! = "es-ec") {
         prismic {
             allPosts(lang: $lang, sortBy: post_date_DESC) {
                 edges {

@@ -9,6 +9,7 @@ import Footer from './Footer';
 import Header from './Header';
 import '../styles/fonts.scss';
 import i18n from '../../config/i18n';
+import 'moment/locale/es';
 
 const LayoutContainer = styled.div`
     max-width: ${dimensions.maxwidthDesktop}px;
