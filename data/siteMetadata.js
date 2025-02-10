@@ -15,17 +15,17 @@ const siteMetadata = {
   github: 'https://github.com/christianguevara',
   x: 'https://x.com/cgthedev',
   // twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
-  threads: 'https://www.threads.net',
-  instagram: 'https://www.instagram.com',
-  medium: 'https://medium.com',
-  bluesky: 'https://bsky.app/',
+  // facebook: 'https://facebook.com',
+  // youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com/in/christiangue',
+  // threads: 'https://www.threads.net',
+  // instagram: 'https://www.instagram.com',
+  // medium: 'https://medium.com',
+  // bluesky: 'https://bsky.app/',
   locale: 'en-US',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
+  /**
   analytics: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
@@ -50,11 +50,15 @@ const siteMetadata = {
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
     // },
   },
+  */
+  /**
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus, beehive
     // Please add your .env file and modify it according to your selection
     provider: 'buttondown',
   },
+  */
+  /**
   comments: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
@@ -85,6 +89,7 @@ const siteMetadata = {
       lang: 'en',
     },
   },
+  */
   search: {
     provider: 'kbar', // kbar or algolia
     kbarConfig: {
