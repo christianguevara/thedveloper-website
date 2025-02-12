@@ -11,7 +11,7 @@ const siteMetadata = {
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
   mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'christian@thedveloper.com',
+  email: 'christian+site@thedveloper.com',
   github: 'https://github.com/christianguevara',
   x: 'https://x.com/cgthedev',
   // twitter: 'https://twitter.com/Twitter',
