@@ -10,9 +10,12 @@ export default function NotFound() {
       </div>
       <div className="max-w-md">
         <p className="mb-4 text-xl leading-normal font-bold md:text-2xl">
-          Sorry we couldn't find this page.
+          Oops! Looks like this page is playing hide and seek... and winning!
         </p>
-        <p className="mb-8">But dont worry, you can find plenty of other things on our homepage.</p>
+        <p className="mb-8">
+          But don't worry! While this page is on vacation, my homepage is having a party and you're
+          invited! 🎉
+        </p>
         <Link
           href="/"
           className="focus:shadow-outline-blue bg-primary-600 hover:bg-primary-700 dark:hover:bg-primary-500 inline rounded-lg border border-transparent px-4 py-2 text-sm leading-5 font-medium text-white shadow-xs transition-colors duration-150 focus:outline-hidden"
