@@ -41,6 +41,9 @@ export default function Home({ posts }) {
                               className="text-gray-900 dark:text-gray-100"
                             >
                               {title}
+                              {post.draft && (
+                                <span className="text-sm text-gray-500"> (Draft)</span>
+                              )}
                             </Link>
                           </h2>
                           <div className="flex flex-wrap">

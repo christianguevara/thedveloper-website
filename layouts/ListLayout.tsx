@@ -132,6 +132,7 @@ export default function ListLayout({
                       <h3 className="text-2xl leading-8 font-bold tracking-tight">
                         <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                           {title}
+                          {post.draft && <span className="text-sm text-gray-500"> (Draft)</span>}
                         </Link>
                       </h3>
                       <div className="flex flex-wrap">
