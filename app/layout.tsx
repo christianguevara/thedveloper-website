@@ -68,29 +68,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <link
+        rel="icon"
+        type="image/png"
+        href={`${basePath}/static/favicons/favicon-96x96.png`}
+        sizes="96x96"
+      />
+      <link rel="icon" type="image/svg+xml" href={`${basePath}/static/favicons/favicon.svg`} />
+      <link rel="shortcut icon" href={`${basePath}/static/favicons/favicon.ico`} />
+      <link
         rel="apple-touch-icon"
-        sizes="76x76"
+        sizes="180x180"
         href={`${basePath}/static/favicons/apple-touch-icon.png`}
       />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href={`${basePath}/static/favicons/favicon-32x32.png`}
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href={`${basePath}/static/favicons/favicon-16x16.png`}
-      />
+      <meta name="apple-mobile-web-app-title" content="TheDveloper" />
       <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
-      <link
-        rel="mask-icon"
-        href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
-        color="#5bbad5"
-      />
-      <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="msapplication-TileColor" content="#ffffff" />
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
