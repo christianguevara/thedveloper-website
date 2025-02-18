@@ -19,7 +19,7 @@ interface LayoutProps {
 }
 
 export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
-  const { slug, title, images } = content
+  const { slug, title, images, caption, parsedCredits } = content
   const displayImage =
     images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
 
@@ -33,6 +33,25 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               <Bleed>
                 <div className="relative aspect-2/1 w-full">
                   <Image src={displayImage} alt={title} fill className="object-cover" />
+                  <div className="absolute right-0 bottom-0 left-0 flex justify-between bg-gradient-to-t from-black/60 to-transparent p-4 text-white">
+                    {parsedCredits && (
+                      <div className="text-xs [text-shadow:_0_1px_1px_black]">
+                        Photo by:{' '}
+                        {parsedCredits.url ? (
+                          <Link href={parsedCredits.url} className="hover:underline">
+                            {parsedCredits.text}
+                          </Link>
+                        ) : (
+                          parsedCredits.text
+                        )}
+                      </div>
+                    )}
+                    {caption && (
+                      <div className="text-right text-sm [text-shadow:_0_1px_1px_black]">
+                        {caption}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </Bleed>
             </div>
@@ -40,6 +59,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
               <PageTitle>{title}</PageTitle>
             </div>
           </div>
+
           <div className="prose dark:prose-invert max-w-none py-4">{children}</div>
           {siteMetadata.comments && (
             <div className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300" id="comment">
