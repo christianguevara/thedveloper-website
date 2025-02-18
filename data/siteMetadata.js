@@ -9,7 +9,7 @@ const siteMetadata = {
   siteUrl: 'https://thedveloper.com',
   siteRepo: 'https://github.com/christianguevara/thedveloper-website',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
-  socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
+  socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.jpg`,
   mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'christian+site@thedveloper.com',
   github: 'https://github.com/christianguevara',
