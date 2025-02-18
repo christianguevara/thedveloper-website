@@ -8,6 +8,7 @@ import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import ArrowLink from '@/components/ArrowLink'
 
 interface LayoutProps {
   content: CoreContent<Blog>
@@ -52,24 +53,21 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
               <div className="flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base">
                 {prev && prev.path && (
                   <div className="pt-4 xl:pt-8">
-                    <Link
+                    <ArrowLink
                       href={`/${prev.path}`}
-                      className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                      text={prev.title}
+                      direction="left"
                       aria-label={`Previous post: ${prev.title}`}
-                    >
-                      &larr; {prev.title}
-                    </Link>
+                    />
                   </div>
                 )}
                 {next && next.path && (
                   <div className="pt-4 xl:pt-8">
-                    <Link
+                    <ArrowLink
                       href={`/${next.path}`}
-                      className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                      text={next.title}
                       aria-label={`Next post: ${next.title}`}
-                    >
-                      {next.title} &rarr;
-                    </Link>
+                    />
                   </div>
                 )}
               </div>

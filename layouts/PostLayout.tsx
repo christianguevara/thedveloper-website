@@ -9,6 +9,7 @@ import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import ArrowLink from '@/components/ArrowLink'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -151,13 +152,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 )}
               </div>
               <div className="pt-4 xl:pt-8">
-                <Link
+                <ArrowLink
                   href={`/${basePath}`}
-                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  text="Back to the blog"
+                  direction="left"
                   aria-label="Back to the blog"
-                >
-                  &larr; Back to the blog
-                </Link>
+                />
               </div>
             </footer>
           </div>
