@@ -59,6 +59,18 @@ const computedFields: ComputedFields = {
   toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
 }
 
+const parseMarkdownLink = (text: string) => {
+  if (!text) return null
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/
+  const match = text.match(linkRegex)
+
+  if (match) {
+    const [_, linkText, url] = match
+    return { text: linkText, url }
+  }
+  return { text, url: null }
+}
+
 /**
  * Count the occurrences of all tags across blog posts and write to json file
  */
@@ -105,6 +117,8 @@ export const Blog = defineDocumentType(() => ({
     draft: { type: 'boolean' },
     summary: { type: 'string' },
     images: { type: 'json' },
+    caption: { type: 'string' },
+    credits: { type: 'string' },
     authors: { type: 'list', of: { type: 'string' } },
     layout: { type: 'string' },
     bibliography: { type: 'string' },
@@ -112,6 +126,10 @@ export const Blog = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    parsedCredits: {
+      type: 'json',
+      resolve: (doc) => parseMarkdownLink(doc.credits || ''),
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
