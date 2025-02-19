@@ -1,11 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { setState, VALID_SYSTEMS } from '../shared/state'
 
-type ResponseData = {
-  damaged_system: string
-}
-
-export async function GET(req: NextRequest, res: NextResponse<ResponseData>) {
+export async function GET() {
   const randomSystem = VALID_SYSTEMS[Math.floor(Math.random() * VALID_SYSTEMS.length)]
   setState(randomSystem)
 
