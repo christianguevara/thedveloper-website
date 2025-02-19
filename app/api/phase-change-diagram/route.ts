@@ -12,13 +12,13 @@ const lowestPressure = 0.05,
   // Gas
   gasVolume2 = 0.0035
 
-// Linear interpolation function, comes from the "pendiente" thingy in spanish
+// Linear interpolation function, comes from the "pendiente" thingy in spanish or that's what I think lol
 function interpolate(pressure: number, P1: number, P2: number, v1: number, v2: number): number {
   return v1 + ((pressure - P1) * (v2 - v1)) / (P2 - P1)
 }
 
 function getSpecificVolumes(pressure: number) {
-  // Limits according to the Rick and Morty reference
+  // Limits according to the Rick and Morty reference, good one!
   if (pressure >= highestPressure) {
     return { specific_volume_liquid: fluidVolume2, specific_volume_vapor: gasVolume2 }
   }
@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const pressureParam = searchParams.get('pressure')
 
+  // 400 if missing params or outside the ranges, that's what I understand from the diagram and T>30C
   if (!pressureParam) {
     return NextResponse.json({ error: "Missing 'pressure' parameter" }, { status: 400 })
   }
