@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { getState, getSystemCode } from '../shared/state'
 
-export async function GET(req: NextRequest, res: NextResponse<string>) {
+export async function GET(req: NextRequest, res: NextResponse) {
   const currentSystem = getState()
 
   if (!currentSystem) {
