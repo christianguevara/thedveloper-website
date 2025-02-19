@@ -1,0 +1,9 @@
+{
+	"redirects": [
+	  {
+		"source": "/wp-content/uploads/logo-firma-horizontal-the-dveloper.png",
+		"destination": "/email-signature-logo.png",
+		"permanent": true
+	  }
+	]
+  }
