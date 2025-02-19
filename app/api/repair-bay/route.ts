@@ -1,9 +1,7 @@
-import { NextResponse } from 'next/server'
-import { getState, getSystemCode, VALID_SYSTEMS } from '../shared/state'
+import { NextResponse, NextRequest } from 'next/server'
+import { getState, getSystemCode } from '../shared/state'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-export async function GET(req: NextApiRequest, res: NextApiResponse<string>) {
+export async function GET(req: NextRequest, res: NextResponse<string>) {
   const currentSystem = getState()
 
   if (!currentSystem) {
