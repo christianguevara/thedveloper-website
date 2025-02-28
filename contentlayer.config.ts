@@ -77,7 +77,7 @@ const parseMarkdownLink = (text: string) => {
 async function createTagCount(allBlogs) {
   const tagCount: Record<string, number> = {}
   allBlogs.forEach((file) => {
-    if (file.tags && (!isProduction || file.draft !== true || file.listed === true)) {
+    if (file.tags && (!isProduction || (file.draft !== true && file.listed !== false))) {
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
         if (formattedTag in tagCount) {
