@@ -147,6 +147,9 @@ export default function ListLayoutWithTags({
                               {post.draft && (
                                 <span className="text-sm text-gray-500"> (Draft)</span>
                               )}
+                              {!post.listed && (
+                                <span className="text-sm text-gray-500"> (Not listed)</span>
+                              )}
                             </Link>
                           </h2>
                           <div className="flex flex-wrap">

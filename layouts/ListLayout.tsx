@@ -133,6 +133,9 @@ export default function ListLayout({
                         <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                           {title}
                           {post.draft && <span className="text-sm text-gray-500"> (Draft)</span>}
+                          {!post.listed && (
+                            <span className="text-sm text-gray-500"> (Not listed)</span>
+                          )}
                         </Link>
                       </h3>
                       <div className="flex flex-wrap">
