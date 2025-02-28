@@ -10,6 +10,8 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 interface PaginationProps {
   totalPages: number
   currentPage: number
@@ -78,7 +80,9 @@ export default function ListLayoutWithTags({
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
 
-  const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
+  const displayPosts = (initialDisplayPosts.length > 0 ? initialDisplayPosts : posts).filter(
+    (post) => (isProduction ? post.listed : true)
+  )
 
   return (
     <>

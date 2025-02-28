@@ -8,8 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = siteMetadata.siteUrl
 
   const blogRoutes = allBlogs
-    // Not listed posts are still included here so they can be generated
-    .filter((post) => !post.draft)
+    .filter((post) => !post.draft && post.listed)
     .map((post) => ({
       url: `${siteUrl}/${post.path}`,
       lastModified: post.lastmod || post.date,

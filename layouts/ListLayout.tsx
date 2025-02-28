@@ -9,6 +9,8 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 interface PaginationProps {
   totalPages: number
   currentPage: number
@@ -77,8 +79,9 @@ export default function ListLayout({
   })
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
-  const displayPosts =
+  const displayPosts = (
     initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+  ).filter((post) => (isProduction ? post.listed : true))
 
   return (
     <>
