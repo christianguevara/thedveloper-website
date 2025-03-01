@@ -124,11 +124,84 @@ constructor() {
 
 ### The play method
 
+The play method can be implemented in two ways
+1. Start from the bottom of the col -_index 6_- and go up until an empty slot is found
+2. Start from the top of the col -_index 0_- and go until you find a non-empty slot and then put the chip/token in the previous slot
 
+Option 2 is the more _"natural way"_ but option 1 is easier to implement. So let's implement option 1
+
+```js
+...
+export const BOARD_SIZE = 7;
+export const SLOTS_TO_WIN = 4;
+
+export class Connect4 {
+  ...
+
+  play(col) {
+    for (let row = BOARD_SIZE - 1; row >= 0; row--) {
+      const valueAtPos = this.board[row][col];
+
+      // If slot is empty, put a value and break
+      if (!valueAtPos) {
+        this.board[row][col] = this.currentPlayer;
+        this.checkWinner(row, col);
+        break;
+      }
+    }
+  }
+}
+```
+
+One of the most important parts in this section, is the `break;` call to stop the loop to continue.
 
 ### Using .table() to print a nice looking board
 
+[console.table()](https://developer.mozilla.org/en-US/docs/Web/API/console/table_static) allows you to print arrays and objects in a nice looking way.
+Way easier than implementing 2x for loops to achieve almost the same result.
+
+```js
+export class Connect4 {
+...
+
+  print() {
+    console.table(this.board);
+  }
+}
+```
+
+The code above will look like.
+
+<div className="w-full sm:max-w-1/2 mx-auto">
+![console.table() example](/static/images/connect-4-console-table.png)
+</div>
 ### The difficult part of checkWinner()
+
+To check for a winner we need to take into account that we need 4 chips in a row in total 4 cases into consideration:
+1. Horizontally ↔
+2. Vertically ↕
+3. Diagonally from right to left  ↖ and ↘ (RTL)
+4. Diagonally from left to right ↗ and ↙ (LTR)
+
+
 
 ## Final thoughts and code
 
+The final code for this Connect 4 implementation handles all the edge cases we discussed:
+
+- Validates column input is within bounds
+- Checks if column is full before playing
+- Detects horizontal, vertical and diagonal wins
+- Handles game ending in draw
+- Alternates between players
+- Prevents further moves after game ends
+
+The core game logic demonstrates important programming concepts like:
+
+- 2D array manipulation
+- Loop control flow
+- Win condition algorithms
+- State management
+- Input validation
+
+You can find the complete code in the [GitHub repository](https://github.com/christianguevara/connect-4).
