@@ -1,0 +1,134 @@
+---
+title: Connect 4 - Interview challenge solution
+date: '2025-02-28'
+tags: ['tech interviews', 'algorithms']
+draft: false
+summary: TODO
+---
+
+## Content
+**TLDR:** [GitHub Repo](https://github.com/christianguevara/connect-4)
+<TOCInline toc={props.toc} exclude="Content" />
+
+## What is connect 4 ?
+
+Connect 4 is a classic two-player game where players take turns dropping colored tokens into a vertical grid.
+The goal is to be the first player to form a line of 4 tokens either horizontally, vertically, or diagonally.
+
+The game mechanics are straightforward:
+
+1. The game board is a 7x7 grid that starts empty
+2. Players take turns selecting a column to drop their token
+3. The token falls to the lowest empty position in that column
+4. A player wins by connecting 4 of their tokens in a line:
+   - Horizontally (left to right)
+   - Vertically (up and down) 
+   - Diagonally (at a 45 degree angle)
+5. If the board fills up with no winner, the game is a draw
+
+<div className="mx-auto max-w-3/4">![Connect 4](https://i.ebayimg.com/images/g/DzMAAOSwSjxj6m0e/s-l1600.jpg)</div>
+
+The key challenge in implementing Connect 4 is efficiently:
+
+- Managing the game state (board representation)
+- Handling token placement and gravity
+- Detecting winning combinations
+- Validating moves (full columns, out of bounds)
+- Switching between players
+
+Let's look at how we can implement this in code...
+
+## The coding challenge
+
+The challenge starts with the following "base" code.
+
+We need to implement: `play`, `checkWinner` and `print`, actually `print` is more like a helper.
+For sure we can implement more methods or properties if needed.
+
+```js
+/**
+Connect4
+
+Connect4 is a game where two players take turns placing a token on columns that drop to the bottom.
+When a player forms 4 of his tokens in a line - horizontally, vertically,or diagonally - the player wins.
+
+[Visualization](https://i.ebayimg.com/images/g/DzMAAOSwSjxj6m0e/s-l1600.jpg)
+
+Implement Connect 4 with the class below.
+*/
+
+export const PLAYER_ONE = 1
+export const PLAYER_TWO = 2
+
+export class Connect4 {
+  constructor() {}
+  play(col) {}
+  checkWinner() {}
+  print() {}
+}
+```
+
+## Implementation
+### Initialize the board
+
+We need to keep track of some stuff like the board, the current player and the winner.
+We can add the properties at class level.
+
+```js
+export class Connect4 {
+  board;
+  currentPlayer;
+  winner;
+  
+  constructor() {}
+}
+```
+
+Then we need to create a base board where we have the "slots" so the "chip" or token can fall in. In this case is the player number.
+
+As you already imagined, we will work with 2D arrays. Something like.
+
+<div className="w-full sm:max-w-1/2 mx-auto border-primary-300">
+|   | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|---|
+| 0 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 1 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 2 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 3 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 4 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 5 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| 6 | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+</div>
+
+So then we need to create the initial array with arrays (2D array).
+I made a mistake when using the [fill()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill) method.
+The error is pointed in code with a comment.
+
+I was not able to see it at first but once I realized it was so obvious 😅.
+
+Also `currentPlayer` is initialized.
+
+```js
+constructor() {
+    // ❌ Same array reference to all positions in the first array
+    // this.board = Array(BOARD_SIZE).fill(Array(BOARD_SIZE).fill(""));
+
+    // Init the board
+    this.board = Array(BOARD_SIZE)
+      .fill(null)
+      .map(() => Array(BOARD_SIZE).fill(""));
+    
+    this.currentPlayer = PLAYER_ONE;
+  }
+```
+
+### The play method
+
+
+
+### Using .table() to print a nice looking board
+
+### The difficult part of checkWinner()
+
+## Final thoughts and code
+
