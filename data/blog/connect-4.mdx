@@ -42,8 +42,8 @@ Let's look at how we can implement this in code...
 
 The challenge starts with the following "base" code.
 
-We need to implement: `play`, `checkWinner` and `print`, actually `print` is more like a helper.
-For sure we can implement more methods or properties if needed.
+We need to implement three methods: `play`, `checkWinner`, and `print` (with `print` serving as a helper method).
+We can certainly implement additional methods or properties if needed.
 
 ```js
 /**
@@ -86,7 +86,7 @@ export class Connect4 {
 
 Then we need to create a base board where we have the "slots" so the "chip" or token can fall in. In this case is the player number.
 
-As you already imagined, we will work with 2D arrays. Something like.
+As you might expect, we will work with 2D arrays. Something like this:
 
 <div className="w-full sm:max-w-1/2 mx-auto">
 |   | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
@@ -124,11 +124,11 @@ constructor() {
 
 ### The play method
 
-The play method can be implemented in two ways
+The play method can be implemented in two ways:
 1. Start from the bottom of the col -_index 6_- and go up until an empty slot is found
 2. Start from the top of the col -_index 0_- and go until you find a non-empty slot and then put the chip/token in the previous slot
 
-Option 2 is the more _"natural way"_ but option 1 is easier to implement. So let's implement option 1
+Option 2 is the more _"natural way"_, but option 1 is easier to implement. Therefore, we'll implement option 1.
 
 ```js
 ...
@@ -169,7 +169,7 @@ play(col) {
 ### Using .table() to print a nice looking board
 
 [console.table()](https://developer.mozilla.org/en-US/docs/Web/API/console/table_static) allows you to print arrays and objects in a nice looking way.
-Way easier than implementing 2x for loops to achieve almost the same result.
+Much easier than implementing 2x for loops to achieve almost the same result.
 
 ```js
 export class Connect4 {
@@ -181,20 +181,21 @@ export class Connect4 {
 }
 ```
 
-The code above will look like.
+The code above will look like:
 
 <div className="w-full sm:max-w-1/2 mx-auto">
 ![console.table() example](/static/images/connect-4-console-table.png)
 </div>
+
 ### The difficult part of checkWinner()
 
-To check for a winner we need to take into account that we need 4 chips in a row in total 4 cases into consideration:
+To check for a winner we need to consider that 4 chips in a row requires checking, in total, 4 cases:
 1. Horizontally ↔
 2. Vertically ↕
 3. Diagonally from right to left  ↖ and ↘ (RTL)
 4. Diagonally from left to right ↗ and ↙ (LTR)
 
-To check the 4 cases above there are also many ways to do it:
+To check the 4 cases above there are many ways to do it:
 1. Brute force. On every new check iterate the whole board and check for horizontal, vertical and diagonal coincidences.
     - Too many loops, too much computational complexity.
 
@@ -204,7 +205,7 @@ To check the 4 cases above there are also many ways to do it:
 3. Starting from the recently inserted chip move around 3 more positions.
     - The newly inserted chip + 3 positions to each side and 4 consecutive chips of the same player = win
 
-From the options above, the **third option** is the most _efficient_. For sure, there are more ways to do it, but for now, I think the third option is enough.
+From the options above, the **third option** is the most _efficient_. Certainly, there are other approaches, but for now, I think the third option is sufficient.
 
 To implement it we need an offset, from the [row, col] coordinate we need to move in different directions.
 1. To the left and right for horizontal checks
@@ -257,7 +258,7 @@ checkWinner(row, col) {
 For example, when checking positions `[row + currentOffset][col + currentOffset]` for diagonal checks, we need to validate that `row + currentOffset` is within the valid range (0 to BOARD_SIZE - 1).
 Otherwise we'll get undefined values or errors when trying to access positions outside the board boundaries.
 
-That's why this condition exists 
+That's why this condition exists:
 ```js
 if (row + currentOffset > 0 && row + currentOffset < BOARD_SIZE)
 ```
@@ -290,7 +291,7 @@ If we don't the counter will reset to 0 and winner will not be found.
 
 ## Final thoughts and code
 
-Extra code not included in this article was added because of validations and readability. But I do think the core part is covered.
+Extra code not included in this article was added because of validations and readability. However, the core functionality has been thoroughly covered.
 
 The final code for this Connect 4 implementation handles all the edge cases we discussed:
 
