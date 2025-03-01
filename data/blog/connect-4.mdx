@@ -10,7 +10,7 @@ summary: 'A step-by-step guide to implementing the classic Connect 4 game in Jav
 **TLDR:** [GitHub Repo](https://github.com/christianguevara/connect-4)
 <TOCInline toc={props.toc} exclude="Content" />
 
-## What is connect 4 ?
+## What is Connect 4?
 
 Connect 4 is a classic two-player game where players take turns dropping colored tokens into a vertical grid.
 The goal is to be the first player to form a line of 4 tokens either horizontally, vertically, or diagonally.
@@ -155,6 +155,17 @@ export class Connect4 {
 
 One of the most important parts in this section, is the `break;` call to stop the loop to continue.
 
+The change of players need to be handled too.
+
+```js
+play(col) {
+  ...
+
+  this.currentPlayer =
+        this.currentPlayer === PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
+}
+```
+
 ### Using .table() to print a nice looking board
 
 [console.table()](https://developer.mozilla.org/en-US/docs/Web/API/console/table_static) allows you to print arrays and objects in a nice looking way.
@@ -183,9 +194,103 @@ To check for a winner we need to take into account that we need 4 chips in a row
 3. Diagonally from right to left  ↖ and ↘ (RTL)
 4. Diagonally from left to right ↗ and ↙ (LTR)
 
+To check the 4 cases above there are also many ways to do it:
+1. Brute force. On every new check iterate the whole board and check for horizontal, vertical and diagonal coincidences.
+    - Too many loops, too much computational complexity.
 
+2. Mini matrix. Check only the slots closer to the newly inserted chip.
+    - A smaller matrix means faster iteration but is still inefficient.
+
+3. Starting from the recently inserted chip move around 3 more positions.
+    - The newly inserted chip + 3 positions to each side and 4 consecutive chips of the same player = win
+
+From the options above, the **third option** is the most _efficient_. For sure, there are more ways to do it, but for now, I think the third option is enough.
+
+To implement it we need an offset, from the [row, col] coordinate we need to move in different directions.
+1. To the left and right for horizontal checks
+2. To top and bottom for vertical checks
+3. To top-left and bottom-right for diagonal LTR checks
+4. To top-right and bottom-left for diagonal RTL checks
+
+For each direction, we need to check 3 positions from the newly inserted chip. For example, if we insert a chip at [3,3]:
+
+- Horizontal: Check positions [3,0], [3,1], [3,2], [3,3], [3,4], [3,5], [3,6]
+- Vertical: Check positions [0,3], [1,3], [2,3], [3,3], [4,3], [5,3], [6,3] 
+- Diagonal LTR: Check positions [0,0], [1,1], [2,2], [3,3], [4,4], [5,5], [6,6]
+- Diagonal RTL: Check positions [0,6], [1,5], [2,4], [3,3], [4,2], [5,1], [6,0]
+
+Make sure to avoid out of bounds indexes, especially for the rows part.
+
+Since we are iterating based on the offset and not specifically on the board itself, we can check all directions in the same loop.
+
+So, 4 arrays are created to store the findings when checking the surroundings of the newly inserted chip.
+The arrays will contain the values of the checked positions. Ex:
+```js 
+[undefined, "", 1, 1, 2, 2, ""]
+```
+
+**Show me the code!**
+
+```js
+checkWinner(row, col) {
+  const horizontals = [];
+  const verticals = [];
+  const diagonalLTR = [];
+  const diagonalRTL = [];
+
+  const offset = SLOTS_TO_WIN - 1;
+  for (
+    let currentOffset = -offset;
+    currentOffset <= offset;
+    currentOffset++
+  ) {
+    horizontals.push(this.board[row][col + currentOffset]);
+    if (row + currentOffset > 0 && row + currentOffset < BOARD_SIZE) {
+      verticals.push(this.board[row + currentOffset][col]);
+      diagonalLTR.push(this.board[row + currentOffset][col + currentOffset]);
+      diagonalRTL.push(this.board[row + currentOffset][col - currentOffset]);
+    }
+  }
+}
+```
+
+For example, when checking positions `[row + currentOffset][col + currentOffset]` for diagonal checks, we need to validate that `row + currentOffset` is within the valid range (0 to BOARD_SIZE - 1).
+Otherwise we'll get undefined values or errors when trying to access positions outside the board boundaries.
+
+That's why this condition exists 
+```js
+if (row + currentOffset > 0 && row + currentOffset < BOARD_SIZE)
+```
+
+> If we find 4 consecutive chips from the current player we have a winner 🎉.
+
+To check for the 4 consecutive chips in the previously created arrays, we can implement a new function called `hasAllNeededSlots()` which receives the array.
+
+```js
+hasAllNeededSlots(arr) {
+    let consecutiveCount = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === this.currentPlayer) {
+        consecutiveCount++;
+        if (consecutiveCount === SLOTS_TO_WIN) {
+          return true;
+        }
+      } else {
+        consecutiveCount = 0;
+      }
+    }
+
+    return consecutiveCount === SLOTS_TO_WIN;
+  }
+```
+
+Checking for `if (consecutiveCount === SLOTS_TO_WIN)` inside the loop is crucial in case we have something like `[undefined, 1, 1, 1, 1, 2, 2]`.
+
+If we don't the counter will reset to 0 and winner will not be found.
 
 ## Final thoughts and code
+
+Extra code not included in this article was added because of validations and readability. But I do think the core part is covered.
 
 The final code for this Connect 4 implementation handles all the edge cases we discussed:
 
