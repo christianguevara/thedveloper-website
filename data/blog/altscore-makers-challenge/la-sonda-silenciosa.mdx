@@ -45,7 +45,7 @@ cURL call:
 curl -X 'GET' \
   'https://makers-challenge.altscore.ai/v1/s1/e1/resources/measurement' \
   -H 'accept: application/json' \
-  -H 'API-KEY: 67fabed9219e474bbeaf380480235c83'
+  -H 'API-KEY: SOME-API-KEY'
 ```
 
 Error response example:
@@ -67,7 +67,7 @@ while true; do
     response=$(curl -s -X 'GET' \
       'https://makers-challenge.altscore.ai/v1/s1/e1/resources/measurement' \
       -H 'accept: application/json' \
-      -H 'API-KEY: 67fabed9219e474bbeaf380480235c83')
+      -H 'API-KEY: SOME-API-KEY')
 
     echo "Response: $response"
 
@@ -118,7 +118,7 @@ Send the response to the API endpoint for the solution:
 curl -X 'POST' \
   'https://makers-challenge.altscore.ai/v1/s1/e1/solution' \
   -H 'accept: application/json' \
-  -H 'API-KEY: 67fabed9219e474bbeaf380480235c83' \
+  -H 'API-KEY: SOME-API-KEY' \
   -H 'Content-Type: application/json' \
   -d '{
   "speed": 405
