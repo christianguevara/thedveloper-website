@@ -10,9 +10,10 @@ summary: 'Solution to the first AltScore programming challenge: Calculate the or
 This challenge belongs to a series of programming challenges published by [AltScore](https://www.altscore.ai/).
 You can see the complete list [here](/blog/altscore-makers-challenge/reto-altscore). This is the **first** challenge.
 
-{/* <TOCInline toc={props.toc} exclude="Content" /> */}
+<TOCInline toc={props.toc} />
 
-## ¡La Sonda Silenciosa! 🛰️
+## Problem statement
+### ¡La Sonda Silenciosa! 🛰️
 **Misión:** Eres un intrépido explorador estelar en una misión crucial para mapear un sistema solar recién descubierto. Tu objetivo es determinar la velocidad orbital instantánea de un planeta potencialmente habitable para evaluar su idoneidad para la vida.
 
 **Desafío:** La extraña interferencia cósmica en esta región del espacio dificulta la obtención de lecturas exitosas de tu escáner de largo alcance.
@@ -34,8 +35,8 @@ Consulta la [Documentación](https://makers-challenge.altscore.ai/docs) para má
 
 ¡Prepárate para desafiar la interferencia cósmica y desentrañar los secretos de este nuevo mundo! 🚀
 
-
-## Check the endpoint
+## Solution
+### Check the endpoint
 When calling the endpoint using cURL we will always get a 200 OK even when the response is an error.
 
 cURL call:
@@ -58,6 +59,8 @@ Error response example:
 I tried like 10 times manually and the response was the same, so it was time to automate it.
 
 **_The good old bash._**
+
+### Automate the endpoint call
 
 ```bash
 while true; do
@@ -91,6 +94,7 @@ Output changed!
 {"distance":"898 AU","time":"2.217283950617284 hours"}
 ```
 
+### Calculate the speed
 Now I need to calculate the speed which is the following formula:
 
 $$
@@ -107,6 +111,7 @@ V = 405 \frac{AU}{hours}
 $$
 
 
+### Send the response
 Send the response to the API endpoint for the solution:
 
 ```bash
