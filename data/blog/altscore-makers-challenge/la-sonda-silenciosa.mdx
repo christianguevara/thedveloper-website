@@ -1,0 +1,131 @@
+---
+title: La Sonda Silenciosa - Interview challenge solution
+date: '2025-03-05'
+tags: ['tech interviews', 'algorithms', 'altscore']
+draft: false
+summary: 'Solution to the first AltScore programming challenge: Calculate the orbital velocity of a planet by making API calls to get distance and time measurements, handling intermittent failures'
+---
+
+
+This challenge belongs to a series of programming challenges published by [AltScore](https://www.altscore.ai/).
+You can see the complete list [here](/blog/altscore-makers-challenge/reto-altscore). This is the **first** challenge.
+
+{/* <TOCInline toc={props.toc} exclude="Content" /> */}
+
+## ¡La Sonda Silenciosa! 🛰️
+**Misión:** Eres un intrépido explorador estelar en una misión crucial para mapear un sistema solar recién descubierto. Tu objetivo es determinar la velocidad orbital instantánea de un planeta potencialmente habitable para evaluar su idoneidad para la vida.
+
+**Desafío:** La extraña interferencia cósmica en esta región del espacio dificulta la obtención de lecturas exitosas de tu escáner de largo alcance.
+
+**Datos Clave:** Cuando el escáner funciona, te proporciona:
+
+- `distance`: La distancia recorrida por el planeta en su órbita durante el período de observación (en unidades astronómicas).
+- `time`: El tiempo transcurrido durante la observación (en horas).
+
+**Objetivo:** Calcular la velocidad orbital instantánea del planeta hasta el número entero más cercano.
+
+**Recursos:**
+
+API para obtener una lectura del escáner: [GET] /v1/s1/e1/resources/measurement (Siempre recibirás un código de estado HTTP 200, incluso si el escaneo no es exitoso).
+
+Envía tu respuesta aquí: [POST] /v1/s1/e1/solution
+
+Consulta la [Documentación](https://makers-challenge.altscore.ai/docs) para más detalles.
+
+¡Prepárate para desafiar la interferencia cósmica y desentrañar los secretos de este nuevo mundo! 🚀
+
+
+## Check the endpoint
+When calling the endpoint using cURL we will always get a 200 OK even when the response is an error.
+
+cURL call:
+
+```bash
+curl -X 'GET' \
+  'https://makers-challenge.altscore.ai/v1/s1/e1/resources/measurement' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: 67fabed9219e474bbeaf380480235c83'
+```
+
+Error response example:
+```json
+{
+  "distance": "failed to measure, try again",
+  "time": "failed to measure, try again"
+}
+```
+
+I tried like 10 times manually and the response was the same, so it was time to automate it.
+
+**_The good old bash._**
+
+```bash
+while true; do
+    response=$(curl -s -X 'GET' \
+      'https://makers-challenge.altscore.ai/v1/s1/e1/resources/measurement' \
+      -H 'accept: application/json' \
+      -H 'API-KEY: 67fabed9219e474bbeaf380480235c83')
+
+    echo "Response: $response"
+
+    if [[ "$response" != '{"distance":"failed to measure, try again","time":"failed to measure, try again"}' ]]; then
+        echo "Output changed!"
+        echo "$response"
+        break
+    fi
+
+    sleep 0.3 
+done
+```
+
+After some tries I get the following answer:
+
+```
+...
+...
+...
+Response: {"distance":"failed to measure, try again","time":"failed to measure, try again"}
+Response: {"distance":"failed to measure, try again","time":"failed to measure, try again"}
+Response: {"distance":"898 AU","time":"2.217283950617284 hours"}
+Output changed!
+{"distance":"898 AU","time":"2.217283950617284 hours"}
+```
+
+Now I need to calculate the speed which is the following formula:
+
+$$
+V = \frac{distance}{time}
+$$
+$$
+V = \frac{898}{2.217283950617284}
+$$
+$$
+V = \frac{898}{2.217283950617284}
+$$
+$$
+V = 405 \frac{AU}{hours}
+$$
+
+
+Send the response to the API endpoint for the solution:
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e1/solution' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: 67fabed9219e474bbeaf380480235c83' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "speed": 405
+  }'
+```
+
+And the response is:
+
+```json
+{
+  "result": "correct"
+}
+```
+
+**TADA!** 🎉
