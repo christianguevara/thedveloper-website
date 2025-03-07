@@ -1,0 +1,83 @@
+Luke Skywalker:1:Luke Skywalker is a Jedi, and belongs to the Light Side of the Force.
+C-3PO:1:C-3PO is a loyal protocol droid, and belongs to the Light Side of the Force.
+R2-D2:8:R2-D2 is an astromech droid, and belongs to the Light Side of the Force.
+Darth Vader:1:Darth Vader was once a Jedi but fell to the Dark Side; he belongs to the Dark Side of the Force.
+Leia Organa:2:Leia Organa is a leader of the Rebellion, and belongs to the Light Side of the Force.
+Owen Lars:1:Owen Lars is a moisture farmer, and belongs to the Light Side of the Force.
+Beru Whitesun lars:1:Beru Whitesun Lars is a moisture farmer, and belongs to the Light Side of the Force.
+R5-D4:1:R5-D4 is an astromech droid, and belongs to the Light Side of the Force.
+Biggs Darklighter:1:Biggs Darklighter is a Rebel pilot, and belongs to the Light Side of the Force.
+Obi-Wan Kenobi:20:Obi-Wan Kenobi is a Jedi Master, and belongs to the Light Side of the Force.
+Anakin Skywalker:1:Anakin Skywalker was a Jedi Knight who fell to the Dark Side, becoming Darth Vader; he belongs to the Dark Side of the Force.
+Wilhuff Tarkin:21:Wilhuff Tarkin is a Grand Moff of the Empire, and belongs to the Dark Side of the Force.
+Chewbacca:14:Chewbacca is a Wookiee warrior and co-pilot of the Millennium Falcon, and belongs to the Light Side of the Force.
+Han Solo:22:Han Solo is a smuggler and hero of the Rebellion, and belongs to the Light Side of the Force.
+Greedo:23:Greedo is a bounty hunter, and belongs to the Dark Side of the Force.
+Jabba Desilijic Tiure:24:Jabba Desilijic Tiure is a crime lord, and belongs to the Dark Side of the Force.
+Wedge Antilles:22:Wedge Antilles is a Rebel pilot, and belongs to the Light Side of the Force.
+Jek Tono Porkins:26:Jek Tono Porkins is a Rebel pilot, and belongs to the Light Side of the Force.
+Yoda:28:Yoda is a Jedi Master, and belongs to the Light Side of the Force.
+Palpatine:8:Palpatine is the Sith Lord, also known as Darth Sidious, and belongs to the Dark Side of the Force.
+Boba Fett:10:Boba Fett is a bounty hunter, and belongs to the Dark Side of the Force.
+IG-88:28:IG-88 is an assassin droid, and belongs to the Dark Side of the Force.
+Bossk:29:Bossk is a Trandoshan bounty hunter, and belongs to the Dark Side of the Force.
+Lando Calrissian:30:Lando Calrissian is a gambler and Rebel ally, and belongs to the Light Side of the Force.
+Lobot:6:Lobot is an aide to Lando Calrissian, and belongs to the Light Side of the Force.
+Ackbar:31:Ackbar is a Rebel admiral, and belongs to the Light Side of the Force.
+Mon Mothma:32:Mon Mothma is a leader of the Rebel Alliance, and belongs to the Light Side of the Force.
+Arvel Crynyd:28:Arvel Crynyd is a Rebel pilot, and belongs to the Light Side of the Force.
+Wicket Systri Warrick:7:Wicket Systri Warrick is an Ewok warrior, and belongs to the Light Side of the Force.
+Nien Nunb:33:Nien Nunb is a Rebel pilot, and belongs to the Light Side of the Force.
+Qui-Gon Jinn:28:Qui-Gon Jinn is a Jedi Master, and belongs to the Light Side of the Force.
+Nute Gunray:18:Nute Gunray is a Trade Federation viceroy, and belongs to the Dark Side of the Force.
+Finis Valorum:9:Finis Valorum is a former Supreme Chancellor, and belongs to the Light Side of the Force.
+Padmé Amidala:8:Padre is a Queen and Senator of Naboo, and belongs to the Light Side of the Force
+Jar Jar Binks:8:Jar Jar Binks is a Gungan representative, and belongs to the Light Side of the Force.
+Roos Tarpals:8:Roos Tarpals is a Gungan captain, and belongs to the Light Side of the Force.
+Rugor Nass:8:Rugor Nass is a Gungan leader, and belongs to the Light Side of the Force.
+Ric Olié:8:Ric Olé is a pilot from Naboo, and belongs to the Light Side of the Force.
+Watto:34:Watto is a junk dealer on Tatooine, and belongs to the Dark Side of the Force.
+Sebulba:35:Sebulba is a podracer pilot, and belongs to the Dark Side of the Force.
+Quarsh Panaka:8:Quarsh Panaka is a security captain, and belongs to the Light Side of the Force.
+Shmi Skywalker:1:Shmi Skywalker is the mother of Anakin Skywalker, and belongs to the Light Side of the Force.
+Darth Maul:36:Darth Maul is a Sith apprentice, and belongs to the Dark Side of the Force.
+Bib Fortuna:37:Bib Fortuna is a majordomo to Jabba the Hutt, and belongs to the Dark Side of the Force.
+Ayla Secura:37:Ayla Secura is a Jedi Knight, and belongs to the Light Side of the Force.
+Ratts Tyerel:38:Ratts Tyerel is a podracer pilot, and belongs to the Light Side of the Force.
+Dud Bolt:39:Dud Bolt is a podracer pilot, and belongs to the Dark Side of the Force.
+Gasgano:40:Gasgano is a podracer pilot, and belongs to the Dark Side of the Force.
+Ben Quadinaros:41:Ben Quadinaros is a podracer pilot, and belongs to the Light Side of the Force.
+Mace Windu:42:Mace Windu is a Jedi Master, and belongs to the Light Side of the Force.
+Ki-Adi-Mundi:43:Ki-Adi-Mundi is a Jedi Master, and belongs to the Light Side of the Force.
+Kit Fisto:44:Kit Fisto is a Jedi Master, and belongs to the Light Side of the Force.
+Eeth Koth:45:Eeth Koth is a Jedi Master, and belongs to the Light Side of the Force.
+Adi Gallia:9:Adi Gallia is a Jedi Master, and belongs to the Light Side of the Force.
+Saesee Tiin:47:Saesee Tiin is a Jedi Master, and belongs to the Light Side of the Force.
+Yarael Poof:48:Yarael Poof is a Jedi Master, and belongs to the Light Side of the Force.
+Plo Koon:49:Plo Koon is a Jedi Master, and belongs to the Light Side of the Force.
+Mas Amedda:50:Mas Amedda is a political aide to Palpatine, and belongs to the Dark Side of the Force.
+Gregar Typho:8:Gregar Typho is a security captain, and belongs to the Light Side of the Force.
+Cordé:8:Cordé is a handmaiden of Padmé Amidala, and belongs to the Light Side of the Force.
+Cliegg Lars:1:Cliegg Lars is a moisture farmer, and belongs to the Light Side of the Force.
+Poggle the Lesser:11:Poggle the Lesser is an archduke of Geonosis, and belongs to the Dark Side of the Force.
+Luminara Unduli:51:Luminara Unduli is a Jedi Master, and belongs to the Light Side of the Force.
+Barriss Offee:51:Barriss Offee is a Jedi Padawan, and belongs to the Light Side of the Force.
+Dormé:8:Dormé is a handmaiden of Padmé Amidala, and belongs to the Light Side of the Force.
+Dooku:52:Dooku is a former Jedi turned Sith Lord, and belongs to the Dark Side of the Force.
+Bail Prestor Organa:2:Bail Prestor Organa is a Senator of Alderaan, and belongs to the Light Side of the Force.
+Jango Fett:53:Jango Fett is a bounty hunter, and belongs to the Dark Side of the Force.
+Zam Wesell:54:Zam Wesell is a bounty hunter, and belongs to the Dark Side of the Force.
+Dexter Jettster:55:Dexter Jettster is a diner owner, and belongs to the Light Side of the Force.
+Lama Su:10:Lama Su is the Prime Minister of Kamino, and belongs to the Light Side of the Force.
+Taun We:10:Taun We is an aide to Lama Su, and belongs to the Light Side of the Force.
+Jocasta Nu:9:Jocasta Nu is the Jedi Temple librarian, and belongs to the Light Side of the Force.
+R4-P17:28:R4-P17 is an astromech droid, and belongs to the Light Side of the Force.
+Wat Tambor:56:Wat Tambor is a leader of the Techno Union, and belongs to the Dark Side of the Force.
+San Hill:57:San Hill is a banker and member of the Separatists, and belongs to the Dark Side of the Force.
+Shaak Ti:58:Shaak Ti is a Jedi Master, and belongs to the Light Side of the Force.
+Grievous:59:Grievous is a cyborg and leader of the Separatist army, and belongs to the Dark Side of the Force.
+Tarfful:14:Tarfful is a Wookiee chieftain, and belongs to the Light Side of the Force.
+Raymus Antilles:2:Raymus Antilles is a Rebel captain, and belongs to the Light Side of the Force.
+Sly Moore:60:Sly Moore is an advisor to Palpatine, and belongs to the Dark Side of the Force.
+Tion Medon:12:Tion Medon is a port administrator, and belongs to the Light Side of the Force.
+

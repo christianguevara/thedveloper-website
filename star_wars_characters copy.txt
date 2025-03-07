@@ -1,0 +1,82 @@
+Luke Skywalker:1
+C-3PO:1
+R2-D2:8
+Darth Vader:1
+Leia Organa:2
+Owen Lars:1
+Beru Whitesun lars:1
+R5-D4:1
+Biggs Darklighter:1
+Obi-Wan Kenobi:20
+Anakin Skywalker:1
+Wilhuff Tarkin:21
+Chewbacca:14
+Han Solo:22
+Greedo:23
+Jabba Desilijic Tiure:24
+Wedge Antilles:22
+Jek Tono Porkins:26
+Yoda:28
+Palpatine:8
+Boba Fett:10
+IG-88:28
+Bossk:29
+Lando Calrissian:30
+Lobot:6
+Ackbar:31
+Mon Mothma:32
+Arvel Crynyd:28
+Wicket Systri Warrick:7
+Nien Nunb:33
+Qui-Gon Jinn:28
+Nute Gunray:18
+Finis Valorum:9
+Padmé Amidala:8
+Jar Jar Binks:8
+Roos Tarpals:8
+Rugor Nass:8
+Ric Olié:8
+Watto:34
+Sebulba:35
+Quarsh Panaka:8
+Shmi Skywalker:1
+Darth Maul:36
+Bib Fortuna:37
+Ayla Secura:37
+Ratts Tyerel:38
+Dud Bolt:39
+Gasgano:40
+Ben Quadinaros:41
+Mace Windu:42
+Ki-Adi-Mundi:43
+Kit Fisto:44
+Eeth Koth:45
+Adi Gallia:9
+Saesee Tiin:47
+Yarael Poof:48
+Plo Koon:49
+Mas Amedda:50
+Gregar Typho:8
+Cordé:8
+Cliegg Lars:1
+Poggle the Lesser:11
+Luminara Unduli:51
+Barriss Offee:51
+Dormé:8
+Dooku:52
+Bail Prestor Organa:2
+Jango Fett:53
+Zam Wesell:54
+Dexter Jettster:55
+Lama Su:10
+Taun We:10
+Jocasta Nu:9
+R4-P17:28
+Wat Tambor:56
+San Hill:57
+Shaak Ti:58
+Grievous:59
+Tarfful:14
+Raymus Antilles:2
+Sly Moore:60
+Tion Medon:12
