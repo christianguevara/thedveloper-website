@@ -12,7 +12,7 @@ async function calculateAverageResonance() {
       {
         headers: {
           accept: 'application/json',
-          'API-KEY': '67fabed9219e474bbeaf380480235c83',
+          'API-KEY': 'API-KEY',
         },
       }
     )

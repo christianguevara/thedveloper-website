@@ -1,4 +1,4 @@
-const API_KEY = '67fabed9219e474bbeaf380480235c83'
+const API_KEY = 'API-KEY'
 const URL = 'https://makers-challenge.altscore.ai/v1/s1/e8/actions/door'
 
 async function makeRequest(currentCookie = '') {

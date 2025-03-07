@@ -2,7 +2,7 @@ while true; do
     response=$(curl -s -X 'GET' \
       'https://makers-challenge.altscore.ai/v1/s1/e1/resources/measurement' \
       -H 'accept: application/json' \
-      -H 'API-KEY: 67fabed9219e474bbeaf380480235c83')
+      -H 'API-KEY: API-KEY')
 
     echo "Response: $response"
 
