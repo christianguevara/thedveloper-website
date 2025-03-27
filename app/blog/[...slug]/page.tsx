@@ -80,8 +80,11 @@ export const generateStaticParams = async () => {
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  // Filter out drafts in production
-  const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
+  // Filter out drafts and not listed posts in production
+  const isProduction = process.env.NODE_ENV === 'production'
+  const sortedCoreContents = allCoreContent(sortPosts(allBlogs)).filter(
+    (post) => !isProduction || (!post.draft && post.listed)
+  )
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {
     return notFound()
