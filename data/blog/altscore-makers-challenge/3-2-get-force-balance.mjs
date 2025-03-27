@@ -42,7 +42,9 @@ async function calculateForceBalance() {
 
     // For some reason 0 was not working so adding decimals here
     if (Math.abs(ibf) < 0.000001) {
-      console.log(`${planetId} | ${light} | ${dark} | ${total}`)
+      console.log(
+        `${String(planetId).padEnd(9)} | ${String(light).padEnd(10)} | ${String(dark).padEnd(9)} | ${total}`
+      )
     }
   }
 }
