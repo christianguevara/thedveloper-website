@@ -39,7 +39,11 @@ const generateRss = (config, posts, page = 'feed.xml') => `
 `
 
 async function generateRSS(config, allBlogs, page = 'feed.xml') {
-  const publishPosts = allBlogs.filter((post) => post.draft !== true && post.listed !== false)
+  const publishPosts = allBlogs.filter((post) => {
+    if (post.draft === true) return false
+    if (post.listed === false) return false
+    return true
+  })
   // RSS for blog post
   if (publishPosts.length > 0) {
     const rss = generateRss(config, sortPosts(publishPosts))
@@ -48,7 +52,9 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 
   if (publishPosts.length > 0) {
     for (const tag of Object.keys(tagData)) {
-      const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => slug(t)).includes(tag))
+      const filteredPosts = publishPosts.filter((post) =>
+        post.tags.map((t) => slug(t)).includes(tag)
+      )
       const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
       const rssPath = path.join(outputFolder, 'tags', tag)
       mkdirSync(rssPath, { recursive: true })
