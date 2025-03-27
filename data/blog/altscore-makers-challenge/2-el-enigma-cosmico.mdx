@@ -1,0 +1,173 @@
+---
+title: El Enigma Cósmico de Kepler-452b - Interview challenge solution
+date: '2025-03-06'
+tags: ['tech interviews', 'algorithms', 'altscore']
+draft: false
+summary: 'A solution to the second AltScore programming challenge where we solve a cosmic puzzle by calculating the average resonance of stars in a nebula. The challenge involves working with a paginated API endpoint, analyzing response headers, and implementing an automated solution to process 100 stars across 34 pages.'
+---
+
+**TLDR:** [GitHub Repo](https://github.com/christianguevara/altscore-makers-challenge/tree/main/2-el-enigma-cosmico)
+
+This challenge belongs to a series of programming challenges published by [AltScore](https://www.altscore.ai/).
+You can see the complete list [here](/blog/altscore-makers-challenge/0-reto-altscore). This is the **second** challenge.
+
+<TOCInline toc={props.toc} />
+
+## Problem statement
+### ¡El Enigma Cósmico de Kepler-452b! 🌌
+
+**Año 3042**: Eres un intrépido navegante a bordo del CSS Hawking, embarcado en una misión de vital importancia: contactar al legendario Oráculo de Kepler-452b.
+Se rumorea que este ser enigmático posee el conocimiento para guiar a la humanidad hacia una era dorada.
+Pero el Oráculo no se revela a cualquiera; solo aquellos que demuestren su ingenio resolviendo un acertijo cósmico serán dignos de su sabiduría.
+
+**La Prueba**: El Oráculo te presenta una interfaz holográfica que muestra una nebulosa estelar ondulante llamada " Lyra".
+La interfaz te permite acceder a los datos de las estrellas en la nebulosa.
+Para cada estrella, obtienes su " resonancia" y sus coordenadas. El Oráculo te desafía a calcular la "resonancia promedio"
+de las estrellas en la nebulosa.
+
+**Pistas:**
+
+- La interfaz te permite navegar por la nebulosa en "saltos estelares", mostrando datos de 3 estrellas por salto.
+- Un mensaje críptico aparece en la pantalla: "El cosmos vibra en una sinfonía matemática. La resonancia de cada estrella se construye sobre la anterior, pero el Oráculo te presenta las estrellas en un orden cósmico propio.".
+- "Los secretos del cosmos no solo están en los datos visibles, sino también en los susurros ocultos en los encabezados de las respuestas."
+- "La paciencia es una virtud, pero la documentación es una herramienta. ¡Úsala sabiamente y el Oráculo te recompensará!"
+
+**Recursos:**
+
+- Puedes usar esta API para obtener los datos de las estrellas: `[GET] /v1/s1/e2/resources/stars`
+- Envía tu respuesta aquí: `[POST] /v1/s1/e2/solution`
+- ¡No olvides consultar la [Documentación](https://makers-challenge.altscore.ai/docs)!
+
+**¿Estás listo para desentrañar la Armonía Oculta y obtener la sabiduría del Oráculo? ¡Que la fuerza cósmica te acompañe! 🚀**
+
+## Solution
+### Check the endpoint
+The instructions says "ocultos en los **encabezados** de las respuestas" which means "headers".
+So, let's check the headers of the response to `[GET] /v1/s1/e2/resources/stars`
+
+```bash
+HTTP/2 200
+x-total-count: 100
+content-type: application/json
+access-control-allow-origin: *
+access-control-allow-methods: POST, GET, PUT, DELETE, OPTIONS
+access-control-allow-headers: Authorization, Content-Type
+x-cloud-trace-context: 215545918b428986e8e8fdc710d9e467
+server: Google Frontend
+content-length: 436
+```
+
+You can see something interesting `x-total-count: 100` it might mean 100 items total.
+So, since the endpoint is paginated and the response includes only 3 results, lets go to page 34.
+
+```bash
+curl -X 'GET' \
+  'https://makers-challenge.altscore.ai/v1/s1/e2/resources/stars?page=34&sort-by=id&sort-direction=desc' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY'
+```
+
+And the result is:
+
+```json
+[
+  {
+    "id": "00d25618-a4a0-4eed-913b-15ec40eb7234",
+    "resonance": 203,
+    "position": {
+      "x": 0.26774087597570273,
+      "y": 0.21098284358632646,
+      "z": 0.9429097143350544
+    }
+  }
+]
+```
+
+Only one element. 3 elements times 34 pages = 102 elements, since we only have 100 in total we are good to go.
+
+$$
+Total pages = \left\lceil \frac{100}{3} \right\rceil
+$$
+
+$$
+Total pages = 34
+$$
+
+
+### Automate the endpoint call
+
+Let's call the endpoint every half second, 1 call of a total of 34 pages.
+
+```js
+for (let page = 1; page <= TOTAL_PAGES; page++) {
+    console.log(`Fetching page ${page} of ${TOTAL_PAGES}...`)
+
+    const response = await fetch(
+      `https://makers-challenge.altscore.ai/v1/s1/e2/resources/stars?page=${page}&sort-by=resonance&sort-direction=desc`,
+      {
+        headers: {
+          accept: 'application/json',
+          'API-KEY': 'API-KEY',
+        },
+      }
+    )
+
+    const data = await response.json()
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  }
+```
+
+### Collect the results
+Since we need to calculate the average resonance we need to collect and aggregate the values.
+
+Let's create the function and some variables to hold the values while the iteration happens.
+
+```js
+async function calculateAverageResonance() {
+  let totalResonance = 0
+  let totalItems = 0
+
+  for (let page = 1; page <= TOTAL_PAGES; page++) {
+   ...
+
+    totalResonance += pageResonance
+    totalItems += data.length
+
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  }
+
+  const average = totalResonance / totalItems
+
+  console.log(`Total items processed: ${totalItems}`)
+  console.log(`Total resonance: ${totalResonance}`)
+  console.log(`Average resonance: ${average.toFixed(2)}`)
+}
+calculateAverageResonance().catch(console.error)
+```
+
+After running the script we get a value of `388.50` but since the endpoint requires an integer we will just send
+`388`
+
+### Send the response
+Send the response to the API endpoint for the solution:
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e2/solution' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "average_resonance": 388
+}'
+```
+
+And the response is.
+
+```json
+{
+  "result": "correct"
+}
+```
+
+**TADA!** 🎉
