@@ -8,6 +8,7 @@ import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
+import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Metadata } from 'next'
 import { SearchConfig, SearchProvider } from 'pliny/search'
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Header />
               <main className="mb-auto">{children}</main>
               <SpeedInsights />
+              <Analytics />
             </SearchProvider>
             <Footer />
           </SectionContainer>
