@@ -1,13 +1,441 @@
 ---
 title: La Búsqueda del Templo Sith Perdido - Interview challenge solution
-date: '2025-03-07'
+date: '2025-03-27'
 tags: ['tech interviews', 'algorithms', 'altscore']
 draft: false
-listed: false
-summary: 'Solution to the third AltScore programming challenge'
+listed: true
+summary: 'A step-by-step solution to find the lost Sith Temple by analyzing Star Wars characters, calculating Force balance indices, and using the SWAPI to identify the planet with perfect Force equilibrium.'
 ---
 
 This challenge belongs to a series of programming challenges published by [AltScore](https://www.altscore.ai/).
 You can see the complete list [here](/blog/altscore-makers-challenge/0-reto-altscore). This is the **third** challenge.
 
-## Content coming soon... 
+**TLDR:**
+- [Get the characters](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/altscore-makers-challenge/3-0-get-characters.mjs)
+- [Decode the oracle notes](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/altscore-makers-challenge/3-1-get-oracle-notes.mjs)
+- [Calculate the force balance](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/altscore-makers-challenge/3-2-get-force-balance.mjs)
+
+## Content
+<TOCInline toc={props.toc} exclude="Content" />
+
+## Problem statement
+### La Búsqueda del Templo Sith Perdido
+
+#### Año Galáctico 34 DBY
+
+La Resistencia ha interceptado un fragmento de un antiguo holocrón Sith que contiene la clave para localizar un templo Sith perdido, el cual se rumorea que guarda secretos poderosos.
+
+Sin embargo, el fragmento está codificado con un complejo acertijo que solo un verdadero maestro de la Fuerza y los datos puede descifrar.
+
+El futuro de la galaxia depende de tu habilidad para descifrar el mensaje y encontrar el templo antes que la Primera Orden.
+
+#### El Desafío
+
+El fragmento del holocrón, el cual se encuentra fuera de nuestra galaxia, contiene datos sobre varios lugares y personajes clave. Tu misión es analizar la forma de realizar la conexión con el holocrón y encontrar el único planeta con equilibrio en la Fuerza.
+
+Investigando la librería del templo Jedi en Coruscant, un antiguo pasaje menciona:
+
+```text
+...el "Índice de Balance de la Fuerza" (IBF) para un planeta específico, es una medida de la
+influencia del Lado Luminoso y del Lado Oscuro de la Fuerza en ese planeta se calcula como:
+
+IBF = ((Número de Personajes del Lado Luminoso) - (Número de Personajes del Lado Oscuro)) /
+       (Total de Personajes en el Planeta)
+
+El IBF te dará un valor entre -1 y 1, donde -1 significa dominio total del Lado Oscuro, 0 significa equilibrio, y
+1 significa dominio total del Lado Luminoso.
+```
+
+#### Pasos
+
+**Pistas**
+
+Utiliza el fragmento de [holocrón](https://swapi.dev/) para recopilar datos sobre personajes y planetas de Star Wars.
+El fragmento del holocrón no contiene información sobre el lado de la fuerza al que pertenecen los personajes, por suerte podemos consultarle a un antiguo oráculo Jedi quien buscará en su rolodex, pero sus respuestas se encuentran extrañamente codificadas...
+
+**Recursos:**
+
+- Accede a los datos de personas y planetas en [SWAPI](https://swapi.dev/)
+- Accede al rolodex del oráculo aquí: `[GET] /v1/s1/e3/resources/oracle-rolodex`
+- Envía tu respuesta aquí: `[POST] /v1/s1/e3/solution`
+- ¡No olvides consultar la [Documentación](https://makers-challenge.altscore.ai/docs)!
+
+**¿Estás listo para salvar la galaxia y desbloquear los secretos del templo Sith perdido? ¡Que la Fuerza te acompañe! ✨**
+
+## Solution
+### Get all the characters
+Based on the resources, we can get all the characters from the SWAPI API using the [https://swapi.dev/api/people/](https://swapi.dev/api/people/) endpoint.
+
+We can get the next page using the `next` property, according to the documentation if `next` is `null`, we have reached the end of the list.
+
+```json
+{
+    "count": 82, 
+    "next": "https://swapi.dev/api/people/?page=2", 
+    "previous": null, 
+    "results": [
+        {
+            "name": "Luke Skywalker", 
+            ...
+            "homeworld": "https://swapi.dev/api/planets/1/", 
+            "url": "https://swapi.dev/api/people/1/"
+        }, 
+        ...
+    ]
+}
+```
+
+Quick, dirty hacky script using our lovely `bash` + `jq` + `curl` and our friend the pipe `|`.
+
+```bash
+#!/bin/bash
+
+url="https://swapi.dev/api/people"
+
+output_file="star_wars_characters_with_homeworld.txt"
+> "$output_file"
+# Go page by page until apparently get null
+while [ -n "$url" ]; do
+    response=$(curl -s "$url")
+    
+    # Get the characters and their homeworld id
+    echo "$response" | jq -r '.results[] | 
+        (.name + ":" + (.homeworld | split("/")[-2]))' >> "$output_file"
+    
+    # Get the next page
+    url=$(echo "$response" | jq -r '.next') 
+    
+    # If the next page is null, break the loop
+    if [ "$url" = "null" ]; then
+        url=""
+    fi
+    
+    sleep 1
+done
+
+echo "Character data --> $output_file" 
+```
+The script above uses `curl -s` to get the response from the API and `jq -r` to parse the JSON and extract the characters and their homeworld id.
+
+As you can see, we are using the `-r` flag to get the raw output, and the `split("/")[-2]` to get the homeworld id.
+`jq` is a powerful tool to parse JSON, you can learn more about it [here](https://stedolan.github.io/jq/manual/).
+
+> You can also ask AI Agents to help you build the script when passing them the json response.
+
+One other amazing thing about bash is the ability to use the `>` operator to create a file and redirect the output to it.
+
+Make sure to use `sleep` to avoid overwhelming the API, not sure about the limit but 1 second should be enough.
+
+Now we have a file called `star_wars_characters_with_homeworld.txt` with the characters and their homeworld id.
+
+Next we will need to fetch the oracle notes for each character, we can do this by sending a GET request to the `oracle-rolodex` endpoint.
+
+File output:
+
+```text
+Luke Skywalker:1
+C-3PO:1
+R2-D2:8
+Darth Vader:1
+Leia Organa:2
+Owen Lars:1
+Beru Whitesun lars:1
+R5-D4:1
+Biggs Darklighter:1
+...
+```
+
+### Get the oracle notes
+
+For example, to get the oracle notes for Luke Skywalker, we can use the following command:
+
+```bash
+curl -X 'GET' \
+  'https://makers-challenge.altscore.ai/v1/s1/e3/resources/oracle-rolodex?name=Luke%20Skywalker' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: 67fabed9219e474bbeaf380480235c83' \
+```
+Take special care with the `%20` in the name, it is the URL encoded version of a space.
+We need to encode the name to be able to send it in the request.
+
+The response will be a JSON object with the oracle notes for each character.
+
+```json
+{"oracle_notes":"THVrZSBTa3l3YWxrZXIgaXMgYSBKZWRpLCBhbmQgYmVsb25ncyB0byB0aGUgTGlnaHQgU2lkZSBvZiB0aGUgRm9yY2Uu"}
+```
+
+The oracle notes are encoded in base64, we need to decode them to get the actual notes.
+
+```bash
+echo "THVrZSBTa3l3YWxrZXIgaXMgYSBKZWRpLCBhbmQgYmVsb25ncyB0byB0aGUgTGlnaHQgU2lkZSBvZiB0aGUgRm9yY2Uu" | base64 -d
+```
+
+The output will be:
+
+```text
+Luke Skywalker is a Jedi, and brothers to the Light Side of the Force.
+```
+
+We have one example with one character, now we can decode the oracle notes for each character and get the force balance index.
+
+Time to write another script to do it, in this case ill use javascript since it has a built in function to decode base64
+and it's easier than doing it in bash.
+
+Lets make the call using raw fetch.
+
+```js
+try {
+	const encodedName = encodeURIComponent(name)
+	const response = await fetch(
+		`https://makers-challenge.altscore.ai/v1/s1/e3/resources/oracle-rolodex?name=${encodedName}`,
+		{
+			headers: {
+				accept: 'application/json',
+				'API-KEY': 'API-KEY',
+			},
+		}
+	)
+
+	const data = await response.json()
+
+	if (data.oracle_notes) {
+		const oracleNotes = Buffer.from(data.oracle_notes, 'base64').toString()
+		console.log(`${name}:${planetId}:${oracleNotes}`)
+	} else {
+		console.log(`${name}:${planetId}:error`)
+	}
+} catch (error) {
+	console.error(`Error processing ${name}:`, error)
+}
+```
+
+Time to write the results in another file in case we break something x).
+
+You can also write in the same file, it's up to you.
+
+The script will:
+- Read the file line by line
+- Split the line by `:` to get the name and planetId
+- Encode the name to be able to send it in the request
+- Fetch the oracle notes
+- Decode the oracle notes
+- Write the result in the output file
+
+```js
+import fs from 'fs/promises'
+
+const INPUT_FILE = 'star_wars_characters_with_homeworld.txt'
+const OUTPUT_FILE = 'star_wars_characters_with_holocron.txt'
+
+async function getOracleNotes() {
+  try {
+    const fileContent = await fs.readFile(INPUT_FILE, 'utf-8')
+    const lines = fileContent.trim().split('\n')
+    const updatedLines = []
+
+    for (const line of lines) {
+      const [name, planetId] = line.split(':')
+      const encodedName = encodeURIComponent(name)
+
+      try {
+        const response = await fetch(
+          `https://makers-challenge.altscore.ai/v1/s1/e3/resources/oracle-rolodex?name=${encodedName}`,
+          {
+            headers: {
+              accept: 'application/json',
+              'API-KEY': 'API-KEY',
+            },
+          }
+        )
+
+        const data = await response.json()
+
+        if (data.oracle_notes) {
+          const oracleNotes = Buffer.from(data.oracle_notes, 'base64').toString()
+          updatedLines.push(`${name}:${planetId}:${oracleNotes}`)
+        } else {
+          updatedLines.push(`${name}:${planetId}:error`)
+        }
+      } catch (error) {
+        console.error(`Error processing ${name}:`, error)
+        updatedLines.push(`${name}:${planetId}:error`)
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    }
+
+    await fs.writeFile(OUTPUT_FILE, updatedLines.join('\n'))
+    console.log(`Oracle notes have been added to ${OUTPUT_FILE}`)
+  } catch (error) {
+    console.error('Error:', error)
+    process.exit(1)
+  }
+}
+
+getOracleNotes()
+```
+The code changed and instead of console.log, we collect the `updatedLines` into an array and later write it to a file.
+
+Remember oracle notes are encoded in base64, so we need to decode them using `Buffer.from(data.oracle_notes, 'base64').toString()`.
+
+Make sure to "limit" the requests; otherwise, you will get rate limited.
+
+File output:
+
+```text
+Luke Skywalker:1:Luke Skywalker is a Jedi, and belongs to the Light Side of the Force.
+C-3PO:1:C-3PO is a loyal protocol droid, and belongs to the Light Side of the Force.
+R2-D2:8:R2-D2 is an astromech droid, and belongs to the Light Side of the Force.
+Darth Vader:1:Darth Vader was once a Jedi but fell to the Dark Side; he belongs to the Dark Side of the Force.
+Leia Organa:2:Leia Organa is a leader of the Rebellion, and belongs to the Light Side of the Force.
+Owen Lars:1:Owen Lars is a moisture farmer, and belongs to the Light Side of the Force.
+...
+```
+We can see a pattern here, if a character belongs to the light side of the force has the *"Light Side"* in the oracle notes,
+and if a character belongs to the dark side of the force has the *"Dark Side"* in the oracle notes.
+
+We don't care about the planet's name for now; we will use the IDs to count and calculate the IBF. We will get the planet's name using the ID later.
+
+For some reason I did not used a "normal" CSV and used `:` as a delimiter. Odd choise I know, but it does the job.
+
+### Calculate the force balance
+Using the file `star_wars_characters_with_holocron.txt` we can calculate the force balance for each planet.
+
+Lets write that will do the following:
+- Read the file line by line
+- Split the line by `:` to get the name, planetId and description
+- Increment the light side count for the planet if the description includes "Light Side"
+- Increment the dark side count for the planet if the description includes "Dark Side"
+- Calculate the IBF for the planet using the formula:
+
+$$
+IBF = \frac{light - dark}{total}
+$$
+
+
+```js
+import fs from 'fs'
+import readline from 'readline'
+
+async function calculateForceBalance() {
+  const lightSideCount = {}
+  const darkSideCount = {}
+  const totalCount = {}
+
+  const fileStream = fs.createReadStream('star_wars_characters_with_holocron.txt')
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity,
+  })
+
+  for await (const line of rl) {
+    if (!line.trim()) continue
+
+    const parts = line.split(':')
+
+    const [name, planetId, description] = parts
+
+    // Increment total count for this planet
+    totalCount[planetId] = (totalCount[planetId] || 0) + 1
+
+    if (description.includes('Light Side')) {
+      lightSideCount[planetId] = (lightSideCount[planetId] || 0) + 1
+    } else if (description.includes('Dark Side')) {
+      darkSideCount[planetId] = (darkSideCount[planetId] || 0) + 1
+    }
+  }
+
+  console.log('Planets with Perfect Force Balance (IBF = 0):')
+  console.log('-------------------------------------------')
+  console.log('Planet ID | Light Side | Dark Side | Total')
+  console.log('-------------------------------------------')
+
+  for (const [planetId, total] of Object.entries(totalCount)) {
+    const light = lightSideCount[planetId] || 0
+    const dark = darkSideCount[planetId] || 0
+
+    const ibf = (light - dark) / total
+
+    // For some reason 0 was not working so adding decimals here
+    if (Math.abs(ibf) < 0.000001) {
+      console.log(
+        `${String(planetId).padEnd(9)} | ${String(light).padEnd(10)} | ${String(dark).padEnd(9)} | ${total}`
+      )
+    }
+  }
+}
+
+calculateForceBalance().catch(console.error)
+```
+
+When the script runs, it will output the planets with perfect force balance, which is the one with IBF = 0.
+
+```text
+Planets with Perfect Force Balance (IBF = 0):
+-------------------------------------------
+Planet ID | Light Side | Dark Side | Total
+-------------------------------------------
+37         | 1          | 1         | 2
+```
+
+The planet with ID 37 has a perfect force balance, which means that the light side and the dark side are equal.
+
+Now to get the planet's name we can use the SWAPI API, no script needed,
+just visit the url [https://swapi.dev/api/planets/37](https://swapi.dev/api/planets/37) and you will see the name.
+
+The answer is:
+
+```json
+{
+    "name": "Ryloth", 
+    "rotation_period": "30", 
+    "orbital_period": "305", 
+    "diameter": "10600", 
+    "climate": "temperate, arid, subartic", 
+    "gravity": "1", 
+    "terrain": "mountains, valleys, deserts, tundra", 
+    "surface_water": "5", 
+    "population": "1500000000", 
+    "residents": [
+        "https://swapi.dev/api/people/45/", 
+        "https://swapi.dev/api/people/46/"
+    ], 
+    "films": [], 
+    "created": "2014-12-20T09:46:25.740000Z", 
+    "edited": "2014-12-20T20:58:18.481000Z", 
+    "url": "https://swapi.dev/api/planets/37/"
+}
+```
+
+The planet with the perfect force balance is `Ryloth`.
+
+Send it using the `[POST] /v1/s1/e3/solution` endpoint.
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e3/solution' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "planet": "Ryloth"
+}'
+```
+
+And the response is.
+
+```json
+{
+  "result": "correct"
+}
+```
+
+**TADA!** 🎉
+
+
+
+
+
+
+
+
