@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 
-const INPUT_FILE = 'star_wars_characters.txt'
+const INPUT_FILE = 'star_wars_characters_with_homeworld.txt'
+const OUTPUT_FILE = 'star_wars_characters_with_holocron.txt'
 
 async function getOracleNotes() {
   try {
@@ -40,8 +41,8 @@ async function getOracleNotes() {
       })
     )
 
-    await fs.writeFile(INPUT_FILE, updatedLines.join('\n'))
-    console.log(`Oracle notes have been added to ${INPUT_FILE}`)
+    await fs.writeFile(OUTPUT_FILE, updatedLines.join('\n'))
+    console.log(`Oracle notes have been added to ${OUTPUT_FILE}`)
   } catch (error) {
     console.error('Error:', error)
     process.exit(1)

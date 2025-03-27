@@ -6,7 +6,7 @@ async function calculateForceBalance() {
   const darkSideCount = new Map()
   const totalCount = new Map()
 
-  const fileStream = fs.createReadStream('star_wars_characters.txt')
+  const fileStream = fs.createReadStream('star_wars_characters_with_holocron.txt')
   const rl = readline.createInterface({
     input: fileStream,
     crlfDelay: Infinity,

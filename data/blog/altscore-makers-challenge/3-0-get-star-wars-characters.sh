@@ -2,7 +2,7 @@
 
 url="https://swapi.dev/api/people"
 
-output_file="star_wars_characters.txt"
+output_file="star_wars_characters_with_homeworld.txt"
 > "$output_file"
 # Go page by page until apparently get null
 #TODO: test if null is right
