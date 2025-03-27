@@ -1,4 +1,4 @@
-const TOTAL_PAGES = 34 // TODO: check this is response is invalid
+const TOTAL_PAGES = 34
 
 async function calculateAverageResonance() {
   let totalResonance = 0
@@ -12,7 +12,7 @@ async function calculateAverageResonance() {
       {
         headers: {
           accept: 'application/json',
-          'API-KEY': 'API-KEY',
+          'API-KEY': '67fabed9219e474bbeaf380480235c83',
         },
       }
     )
