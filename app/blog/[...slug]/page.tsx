@@ -1,18 +1,17 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
-import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs, allAuthors } from 'contentlayer/generated'
-import type { Authors, Blog } from 'contentlayer/generated'
-import PostSimple from '@/layouts/PostSimple'
-import PostLayout from '@/layouts/PostLayout'
-import PostBanner from '@/layouts/PostBanner'
-import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
+import PostBanner from '@/layouts/PostBanner'
+import PostLayout from '@/layouts/PostLayout'
+import PostSimple from '@/layouts/PostSimple'
+import type { Authors, Blog } from 'contentlayer/generated'
+import { allAuthors, allBlogs } from 'contentlayer/generated'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { allCoreContent, coreContent, CoreContent, sortPosts } from 'pliny/utils/contentlayer'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -77,6 +76,24 @@ export const generateStaticParams = async () => {
   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
+const findNextListedPost = (posts: CoreContent<Blog>[], startIndex: number) => {
+  for (let i = startIndex + 1; i < posts.length; i++) {
+    if (posts[i].listed !== false) {
+      return posts[i]
+    }
+  }
+  return undefined
+}
+
+const findPrevListedPost = (posts: CoreContent<Blog>[], startIndex: number) => {
+  for (let i = startIndex - 1; i >= 0; i--) {
+    if (posts[i].listed !== false) {
+      return posts[i]
+    }
+  }
+  return undefined
+}
+
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
@@ -90,9 +107,11 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     return notFound()
   }
 
-  const prev = sortedCoreContents[postIndex + 1]
-  const next = sortedCoreContents[postIndex - 1]
   const post = allBlogs.find((p) => p.slug === slug) as Blog
+  // Find next and prev listed posts
+  const prev = findNextListedPost(sortedCoreContents, postIndex)
+  const next = findPrevListedPost(sortedCoreContents, postIndex)
+
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)
