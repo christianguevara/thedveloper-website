@@ -1,13 +1,107 @@
 ---
 title: La Búsqueda de la Forja Élfica Olvidada - Interview challenge solution
-date: '2025-03-08'
+date: '2025-03-28'
 tags: ['tech interviews', 'algorithms', 'altscore']
 draft: false
-listed: false
-summary: 'Solution to the fourth AltScore programming challenge'
+listed: true
+summary: 'Thought train to the fourth AltScore programming challenge; it involves finding hidden credentials by following the clues in the poem.'
 ---
+
+**TLDR:** The solution involves analyzing the Elven poem to find hidden patterns and meanings. The username is "Not all those who wander" and the password is "are lost".
 
 This challenge belongs to a series of programming challenges published by [AltScore](https://www.altscore.ai/).
 You can see the complete list [here](/blog/altscore-makers-challenge/0-reto-altscore). This is the **fourth** challenge.
 
-## Content coming soon... 
+<TOCInline toc={props.toc} />
+
+## Problem statement
+### La Búsqueda de la Forja Élfica Olvidada 🧝‍♂️
+**Año 3018 de la Tercera Edad**
+
+La Tierra Media está al borde de la guerra. Las fuerzas de Sauron reúnen fuerza, y el Anillo Único ha sido encontrado. Sin embargo, en lo más profundo de las historias olvidadas de los Elfos, hay un secreto que podría inclinar la balanza del poder: una forja oculta, utilizada una vez para fabricar armas capaces de resistir el poder del Señor Oscuro.
+
+Los antiguos escritos hablan de un acertijo, uno que solo un verdadero maestro de las letras puede resolver, revelando la entrada a la forja. Tu misión es descifrar las pistas y descubrir las credenciales ocultas que te permitirán pasar por la puerta élfica y entrar en la forja.
+
+Al llegar a la entrada del templo, encuentras una puerta de piedra tallada con runas élficas. En el centro de la puerta, un poema está grabado en una lengua antigua, y debajo de él, un campo en el que puedes ingresar un usuario y una contraseña.
+
+***El poema, escrito en un idioma perdido, reza así:***
+
+```text
+The Keeper of Secrets, Elven Lore,
+Guards the door to ancient war.
+A name in whispers, subtly veiled,
+The key to forge the fading light.
+
+A password cloaked in shadows deep,
+Where truth and trust in darkness sleep.
+Reveal the word, but tread with care,
+For only those who dare to stare.
+
+Through webs of spells and runes that guard,
+The path to wisdom, worn and hard.
+The quest is yours, the way is paved,
+By username in light engraved.
+
+Password bound by hidden might,
+Shift the veil, and find the light.
+```
+
+Debajo de la puerta, encuentras un campo para ingresar un usuario y una contraseña.
+
+<p>Usuario: ???  <span style={{ float: 'right' }} className="text-white dark:text-black">Not all those who wander</span></p>
+
+<p>Contraseña: <input type="password" value="are lost" readOnly="" /></p>
+
+**Recursos:**
+
+- Envía tu respuesta aquí: `[POST] /v1/s1/e4/solution`
+- ¡No olvides consultar la [Documentación](https://makers-challenge.altscore.ai/docs)!
+
+## Solution
+### Analyzing the Riddle
+
+The poem is a riddle that talks about something hidden somewhere.
+We need to find the hidden credentials to pass through the door, since we don't have an API
+to interact with we can start by the username and password fields.
+
+1. **Username Analysis:**
+   - The username field shows "???" since something is hidden, let's check the console for clues
+   - Nothing interesting in the console, let's try to find the hidden text in the API calls
+   - Nothing interesting in the API calls, let's try to find the hidden text in the HTML
+   - Boom! We found the hidden text, it's "Not all those who wander" wrote in white color so it's "invisible"
+
+2. **Password Analysis:**
+   - The password field is shown as an input with some dots, let's check the console for clues
+   - Nothing interesting in the console
+   - Let's try to find the hidden text in the HTML like we did with the username
+   - Boom! We found the hidden text, it's "are lost" as part of the value of the input
+
+
+### The Answer
+
+- **Username:** Not all those who wander
+- **Password:** are lost
+
+Let's submit the answer:
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e4/solution' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -d '{
+    "username": "Not all those who wander",
+    "password": "are lost"
+  }'
+``` 
+
+And the response is.
+
+```json
+{
+  "result": "correct"
+}
+```
+
+**TADA!** 🎉
