@@ -35,5 +35,3 @@ console.log('-----------------')
 result.forEach((row, index) => {
   console.log(`${index + 1} ${row}`)
 })
-
-export { parseRadar }
