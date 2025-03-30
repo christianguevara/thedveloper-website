@@ -61,21 +61,20 @@ Debajo de la puerta, encuentras un campo para ingresar un usuario y una contrase
 ### Analyzing the Riddle
 
 The poem is a riddle that talks about something hidden somewhere.
-We need to find the hidden credentials to pass through the door, since we don't have an API
-to interact with we can start by the username and password fields.
+We need to find the hidden credentials to pass through the door. Since we don't have an API
+to interact with, we can start with the username and password fields.
 
 1. **Username Analysis:**
-   - The username field shows "???" since something is hidden, let's check the console for clues
-   - Nothing interesting in the console, let's try to find the hidden text in the API calls
-   - Nothing interesting in the API calls, let's try to find the hidden text in the HTML
-   - Boom! We found the hidden text, it's "Not all those who wander" wrote in white color so it's "invisible"
+   - The username field shows "???" since something is hidden. Let's check the console for clues.
+   - Nothing interesting in the console. Let's try to find the hidden text in the API calls.
+   - Nothing interesting in the API calls. Let's try to find the hidden text in the HTML.
+   - Boom! We found the hidden text. It's "Not all those who wander" written in white color, so it's "invisible."
 
 2. **Password Analysis:**
-   - The password field is shown as an input with some dots, let's check the console for clues
-   - Nothing interesting in the console
-   - Let's try to find the hidden text in the HTML like we did with the username
-   - Boom! We found the hidden text, it's "are lost" as part of the value of the input
-
+   - The password field is shown as an input with some dots. Let's check the console for clues.
+   - Nothing interesting in the console.
+   - Let's try to find the hidden text in the HTML like we did with the username.
+   - Boom! We found the hidden text. It's "are lost" as part of the value of the input.
 
 ### The Answer
 
@@ -95,7 +94,7 @@ curl -X 'POST' \
   }'
 ``` 
 
-And the response is.
+And the response is:
 
 ```json
 {
