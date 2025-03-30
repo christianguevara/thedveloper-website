@@ -100,19 +100,18 @@ a01b01c01d01e01f01g01h01|a02b02c02d02e$2f02g02h02|a03b03c03d03e03f03g03h$3|a04b0
 The radar is a string that contains the position of the enemy ship and the obstacles in some format that we need to understand.
 
 My process was:
-- Looks like the `|` character is used to separate the rows of the matrix
-- a,b,c,d,e,f,g,h are the columns or rows
-- 1,2,3,4,5,6,7,8 are the columns or rows
+- It looks like the `|` character is used to separate the rows of the matrix
+- a, b, c, d, e, f, g, h are the columns or rows
+- 1, 2, 3, 4, 5, 6, 7, 8 are the columns or rows
 - Try to find a pattern for the first part of the string `a01b01c01d01e01f01g01h01` in the matrix
-- Not much to understand, nothing special, lets try with another part of the string `a02b02c02d02e$2f02g02h02`
-- Ok, we can see the string has a `$` and the matrix have some rows that contains a `$` character
-- You can see each part separated by the pipe has the same leters but different numbers, from 1 to 8, and the matrix is a 8x8 grid
+- Not much to understand, nothing special, let's try with another part of the string `a02b02c02d02e$2f02g02h02`
+- Ok, we can see the string has a `$` and the matrix has some rows that contain a `$` character
+- You can see each part separated by the pipe has the same letters but different numbers, from 1 to 8, and the matrix is an 8x8 grid
 - The part `a02b02c02d02e$2f02g02h02` has the number 2, it can be vertical or horizontal
-- Lets try with the second row bottom to top because the second row from top to bottom doesn't have a the `$` character
+- Let's try with the second row bottom to top because the second row from top to bottom doesn't have the `$` character
 - We need to get `0 0 0 0 $ 0 0 0` from `a02b02c02d02e$2f02g02h02`
 - If we remove the letters we get `02020202$2020202`
 - If we remove the number 2 we get `0000$000` -> add some spaces and we get `0 0 0 0 $ 0 0 0`
-
 
 So, each part of the string is a row of the matrix from bottom to top, the numbers are the rows and the letters are the columns.
 
