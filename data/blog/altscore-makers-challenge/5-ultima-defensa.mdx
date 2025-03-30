@@ -92,10 +92,10 @@ a01b01c01d01e01f01g01h01|a02b02c02d02e$2f02g02h02|a03b03c03d03e03f03g03h$3|a04b0
 
 ## Solution
 
-> I DID NOT solved this challenge, I made some mistakes reading the radar I was not aware of and the time was running out.
+> I DID NOT solve this challenge. I made some mistakes reading the radar that I was not aware of, and the time was running out.
 > I'm going to share my thought process and the code I wrote to try to solve it.
 
-### Understand how to build the matrix from the radar
+### Understanding how to build the matrix from the radar
 
 The radar is a string that contains the position of the enemy ship and the obstacles in some format that we need to understand.
 
@@ -185,3 +185,105 @@ Radar Matrix (8x8):
 ```
 
 Which is exactly as the example given in the problem statement.
+
+### Let's start the game
+
+To start the game we need to call the `start` endpoint.
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e5/actions/start' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -d ''
+```
+
+The clock is now running, we have 10 minutes to shoot the enemy ship.
+
+Checking at the docs there is another endpoint to read the radar and to attack the enemy ship.
+
+> Remember we only have 4 turns, so we need to be careful and use the radar to know the position of the enemy ship.
+
+Each time we read the **radar or make an attack counts as _one turn_**, so we need to plan our moves carefully within our 4-turn limit.
+This is where I made the mistake, I was not aware that the radar query counts as one turn 
+so I ended up calling radar twice and wasting one turn.
+
+### Time to read the radar
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e5/actions/perform-turn' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "action": "radar",
+  "attack_position": null
+}'
+```
+
+This will return the radar data in the format we need to parse. When I tried to solve the challenge I did not save the radar read.
+
+According to the docs we should get a response similar to:
+
+```json
+{
+  "performed_action": "radar",
+  "turns_remaining": 3,
+  "time_remaining": 10,
+  "action_result": "something",
+  "message": "RADAR_READ_HERE"
+}
+```
+
+Using our script implemented above we can parse the radar data and get the matrix.
+
+We need to find our ship and the enemy ship in the matrix.
+
+- Our ship is represented by the `#` character.
+- The enemy ship is represented by the `^` character.
+- Something important to notice is the response can also have obstacles represented by the `$` character.
+- Not sure what to do, but I guess we cannot shoot through obstacles.
+
+We need to predict the enemy ship movement:
+- Use the last 3 radar reads to predict the movement 👾
+- Make sure to take into account the obstacles 🧱
+- Then shoot 🔫
+
+
+### Attack the enemy ship
+Let's imagine we know the enemy ship position in the next turn and the position is `(a, 3)`.
+Remember X is the column and Y is the row. X goes from a to h and Y goes from 1 to 8.
+
+So, if we want to shoot the enemy ship at the coordinates `(a,3)` we need to do:
+
+```bash
+curl -X 'POST' \
+  'https://makers-challenge.altscore.ai/v1/s1/e5/actions/perform-turn' \
+  -H 'accept: application/json' \
+  -H 'API-KEY: API-KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "action": "attack",
+  "attack_position": {
+    "x": "a",
+    "y": 3
+  } 
+}'
+```
+
+I guess if we hit the ship we will get a positive result and if we miss we will get a negative result and game over.
+
+Since I was not able to complete the challenge, I'm getting the following response:
+
+```json
+{
+  "code": "ConflictError",
+  "message": "conflict error",
+  "details": {
+    "message": "Turn limit reached, game over"
+  }
+}
+```
+
+~**TADA!** 🎉~ :(
