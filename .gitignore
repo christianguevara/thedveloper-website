@@ -50,3 +50,7 @@ yarn-error.log*
 
 # History plugin
 .history
+.env
+*.pem
+keys.json
+cipher*.json
