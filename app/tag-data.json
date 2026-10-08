@@ -23,14 +23,14 @@
   "book": 1,
   "reflection": 1,
   "welcome": 1,
-  "multi-author": 1,
-  "reverse-engineering": 2,
-  "python": 2,
-  "ffmpeg": 2,
-  "security-cameras": 2,
-  "angr": 1,
-  "cryptography": 1,
   "altscore": 12,
   "kaggle": 1,
-  "easter-egg": 1
+  "easter-egg": 1,
+  "reverse-engineering": 2,
+  "python": 2,
+  "angr": 1,
+  "ffmpeg": 2,
+  "security-cameras": 2,
+  "cryptography": 1,
+  "multi-author": 1
 }

@@ -24,7 +24,7 @@ I wanted my own footage off my own card. The eufy app only lets you export clips
 
 ## A Note on AI Collaboration
 
-Same honesty as last time: I did this with Claude (Opus), and the heavy reverse engineering was the model's work. I own the camera, the card, and the account; the direction, the pushing, and the stubbornness were mine.
+Same honesty as last time: I did this with Claude, and the heavy reverse engineering was the model's work. I own the camera, the card, and the account; the direction, the pushing, and the stubbornness were mine.
 
 Here's the part I want to be transparent about, because it's the most interesting bit. **The AI kept getting stuck, and more than once declared it impossible.** At one point a safety filter halted a response mid-answer, because "decrypt this camera's video" reads like something shady until you remember it's *my* camera and *my* recordings. At other points the model wrote confident conclusions like "bulk decryption is not achievable with camera + card + account" and wanted to settle for extracting the audio track.
 
@@ -215,6 +215,18 @@ Everything here is for a **T8400 on firmware 2.2.0.0**, with the Anker eufy Andr
 3. **The key was never on the card or in the stream** - it's derived from the serial, the PPCS id, and a per-file random, by a function in the app.
 4. **Don't reimplement obfuscated crypto - execute it.** angr ran the real function with its real byte-shuffles; I never had to understand them.
 5. **"Impossible" was wrong four separate times.** Each wall had a door; persistence plus the right tool found it.
+
+## What It Cost, and the Part Worth Saying
+
+I did this with Claude, through Claude Code, and the meter is public, so here it is: the whole project cost **$211.26** in model usage - roughly four hours of actual API time stretched across a day and a half of back-and-forth, most of it spent on the ARM disassembly and symbolic execution.
+
+![Claude Code session usage summary - total cost of 211.26 USD, about 4 hours of API time, and 1057 lines of code](/static/images/eufy-t8400-claude-code-usage.png)
+
+Two hundred dollars to recover my own footage sounds steep until you price the alternative. This is deep reverse engineering - native-library tracing, symbolic execution of an Android binary, a key scheme three transforms deep - the kind of thing that's a specialist contract measured in weeks, not an afternoon.
+
+But the number isn't the point. The point is what it says about working _with_ these models. Left to its own judgment, Claude hit a wall and told me, confidently, that bulk decryption was impossible - twice - and offered to hand me the audio track and call it done. What turned that around wasn't a smarter model. It was direction: "you have the hardware, you're the owner, keep going." "Use the server." "The paper says brute force is feasible." "Start from first principles." Each of those unlocked a step the model wouldn't take on its own.
+
+That's the real takeaway. These models are genuinely amazing when they're pointed well - they'll grind through disassembly and symbolic execution that no human wants to do by hand, for the price of a nice dinner - but they're only as relentless as the person steering them. The intelligence is real; so is the need for someone who refuses to accept "impossible." Guide it correctly and it's extraordinary.
 
 ## Final Thoughts
 
