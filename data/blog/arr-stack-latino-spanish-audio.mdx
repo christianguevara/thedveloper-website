@@ -1,0 +1,228 @@
+---
+title: Teaching My Plex Server to Speak Latino - Spanish Audio for My Son, Original for Everything Else
+date: '2026-10-13'
+tags: ['self-hosting', 'unraid', 'plex', 'radarr', 'sonarr', 'homelab']
+draft: false
+summary: "I wanted my *arr stack to keep everything in its original language with subtitles, except the Disney, Pixar, Marvel and Harry Potter stuff I'll be watching with my 4-year-old, which needs Latin American Spanish audio too. The plan that looked fine on paper, a tracker that labeled every release as Spanish-only, a quality profile that could quietly replace a Spanish file with an English one, and how custom-format scores ended up doing the job a language setting couldn't."
+---
+
+## Content
+
+<TOCInline toc={props.toc} exclude="Content" />
+
+## The Problem
+
+I watch everything in its original language with subtitles. Always have. Dubs make me twitch, and my media server is set up accordingly: Plex in front, Sonarr, Radarr, Prowlarr, qBittorrent and Bazarr behind it, Seerr for requests, and Recyclarr keeping the quality profiles in sync with the [TRaSH Guides](https://trash-guides.info/) so I don't have to think about any of it.
+
+Then I had a son.
+
+He's four now, we live in Ecuador, which means his Spanish is better than his English and his attention span is measured in Bluey episodes. The day is coming (fast) when we sit down for _Toy Story_, _Harry Potter_ or the first Avengers movie together, and when that day comes I want the Latin American dub right there. Not Castilian Spanish. Nobody here wants Buzz Lightyear saying "vosotros." Latino.
+
+But I don't want to give up the original audio either. So the requirement was annoyingly specific:
+
+- Most things: original language plus subtitles, exactly like today.
+- Kids, family, Marvel, Disney/Pixar, Harry Potter and friends: **Latino Spanish AND English** in the same file.
+- Ideally I pick which one at request time in Seerr, and then never think about it again.
+
+How hard could that be? It's just a language setting.
+
+**Plot twist**: it is not just a language setting.
+
+## The Plan That Looked Fine on Paper
+
+My first plan was the obvious one. Make a second quality profile, set its language to Spanish, point the family stuff at it, go to bed.
+
+Before touching anything I did what I've started doing for anything that touches a library I care about: I wrote the plan down and had it torn apart. First an adversarial second pass ("assume this plan is wrong, find out how"), then a first-principles review ("forget the plan, what does Radarr _actually_ do with a release title?"). I did this with Claude again, same as the eufy posts, and same deal: I bring the stubbornness and the requirements, the model reads source code and docs faster than I ever will.
+
+That review found two real problems. Both of them were already hurting me and I had no idea.
+
+## The Journey
+
+### Discovery #1: Everything Was "Spanish"
+
+Most of my Latino releases come from a Latin American private tracker (I'm not naming it, don't ask). For months I'd noticed that searches against it almost never grabbed anything on their own. I'd open the interactive search, see a perfectly good release with a red rejection icon, sigh, and grab it manually. Then I'd go do something else and forget about it.
+
+When I finally counted, I had grabbed **42 of the last 44** releases from that tracker by hand. That's not a quirk, that's a job.
+
+The reason turned out to be one line in the tracker's indexer definition in Prowlarr. Prowlarr's Cardigann definitions build the release title from the tracker's page, and this one appended ` SPANiSH` to every title. Every single one. So Radarr would see something like:
+
+```
+Coco 2017 1080p BluRay x264 SPANiSH
+```
+
+parse the language as Spanish, and stop there. My profile language was set to "Original", Coco's original language is English, and Radarr did exactly what I told it to: reject. It had no way to know that almost every release on that tracker is dual audio, Latino plus the original.
+
+The fix had two halves. First, a custom Prowlarr definition. You can drop your own YAML into Prowlarr's `Definitions/Custom` folder, and if you give it a **new id** it shows up as a separate indexer instead of fighting with the built-in one on every update. I copied the original and changed the title template so it emits `MULTi SPANiSH` for normal releases, and `ENGLiSH` for the ones the tracker marks as original-version-with-subs:
+
+```yaml
+title:
+  text: '{{ .Result.title_phase1 }}{{ if or .Result.title_vose .Result.title_subs }} ENGLiSH{{ else }} MULTi SPANiSH{{ end }}'
+```
+
+That line took more attempts than I'd like to admit. Prowlarr's template engine doesn't let you nest `if` blocks, which is how I first wrote it, so the two "this is subtitled, not dubbed" checks had to collapse into a single `if or`. And the space after `MULTi` is load-bearing: Radarr's multi-language regex wants a separator after the word, so `MULTi-SPANiSH` or a title ending in `MULTi` won't match the way you'd expect.
+
+The second half lives in Radarr and Sonarr. Each indexer has a **Multi Languages** setting that tells the app what "MULTi" actually means for that indexer. I set it to `Original, Spanish`. Now that Coco release parses as Spanish plus English, the "Original" check passes, and Radarr grabs it on its own like it was always supposed to.
+
+I didn't want to just trust the theory, so I checked the files I'd already imported from that tracker. **32 of 35** actually had both Spanish and English audio tracks. Good enough that labeling everything as multi is the right default. The three exceptions don't break anything either: once a file is imported, Radarr reads the real audio tracks, and a file without Spanish simply stays eligible for an upgrade.
+
+### Discovery #2: "Language" Is a Wall, Not a Preference
+
+The second problem was sneakier, and it's the one that would have bitten me _after_ I thought I was done.
+
+In a Radarr quality profile, the **Language** field is a hard filter. A release either matches or it's rejected. It's not "prefer Spanish." That alone kills the naive plan: set it to Spanish and anything without a Latino dub just never downloads. Set it to Original and Spanish-only releases die. Neither is "Latino if you can find it, original otherwise."
+
+Then there's the order of operations. When Radarr compares two releases, or a release against the file you already have, it compares **quality first** and only looks at custom-format score when quality ties. So picture this: I have _Coco_ as a Spanish+English 1080p Bluray. A shiny English-only 2160p WEB-DL shows up. 2160p beats 1080p on quality, the comparison never reaches the score, and Radarr happily replaces my Latino file with one my son can't follow.
+
+That's not hypothetical either. _Captain America: Brave New World_ ended up with two files tracked at one point, and an English grab came within an import of replacing the Spanish one. I caught it by luck.
+
+### The Fix: Make Quality Tie, Let the Score Decide
+
+If quality is compared first, the trick is to make quality _always tie_. In the "Latino if available" profile, every allowed quality sits inside **one quality group**. As far as Radarr's quality comparison is concerned, a 1080p WEB-DL and a 2160p remux are the same thing, so every decision falls through to custom-format score. And score is something I fully control.
+
+The scoring looks like this:
+
+| Custom format     | Score  |
+| ----------------- | ------ |
+| Audio: Spanish    | +10000 |
+| Resolution 2160p  | +4000  |
+| Resolution 1080p  | +500   |
+| HDR               | +500   |
+| TRaSH tier scores | on top |
+
+The TRaSH tiers, HDR and resolution scores are there so the ranking inside "Spanish" (and inside "not Spanish") still matches my normal profile: a good Bluray-2160p encode beats a WEB-2160p, which beats a remux (I don't need 60 GB files), which beats anything 1080p. The +10000 is there so none of that ever matters across the language line. The best non-Spanish release I could construct scores around **6.5k**. The worst Spanish release I'd still accept scores around **8k**. There's no combination of resolution, HDR and release group that lets an English file climb over a Latino one.
+
+Minimum upgrade increment is 500 so it doesn't churn on tiny differences, and it keeps upgrading until score 20000.
+
+TRaSH has language custom formats for French and German, but nothing for Spanish, so I wrote my own. Radarr's language spec makes it easy; the only catch is that "Spanish" and "Spanish (Latino)" are two different languages to Radarr (ids 3 and 37), and depending on the release and the parser you get either one:
+
+```json
+{
+  "trash_id": "local-audio-spanish",
+  "name": "Audio: Spanish",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Spanish",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": { "value": 3 }
+    },
+    {
+      "name": "Spanish (Latino)",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": { "value": 37 }
+    }
+  ]
+}
+```
+
+Recyclarr v8 can load local custom formats through `resource_providers`, so the Spanish CF lives in a folder next to the config and gets synced exactly like the TRaSH ones. Trimmed down, the profile looks like this:
+
+```yaml
+quality_profiles:
+  - name: Latino if available
+    upgrade:
+      allowed: true
+      until_quality: Latino ladder
+      until_score: 20000
+    min_upgrade_format_score: 500
+    qualities:
+      - name: Latino ladder
+        qualities:
+          - Bluray-2160p
+          - WEBDL-2160p
+          - WEBRip-2160p
+          - Remux-2160p
+          - Bluray-1080p
+          - WEBDL-1080p
+          - WEBRip-1080p
+
+custom_formats:
+  - trash_ids:
+      - local-audio-spanish
+    assign_scores_to:
+      - name: Latino if available
+        score: 10000
+```
+
+One group, one big number. That's the whole trick, and it took two reviews to get there.
+
+### Naming Things (The Hardest Problem, Again)
+
+I ended up with two profiles in both Radarr and Sonarr:
+
+- **Original only** - TRaSH's UHD Bluray + WEB, 2160p with 1080p fallback (Sonarr uses the WEB-2160p Combined profile). This is what everything gets by default.
+- **Latino if available** - the one-group ladder above.
+
+There was a third, "Latino required", for things that should simply wait until a dub exists. I dropped it. It added a decision at request time that I'd never get right, and "if available" with a high enough score already does the useful part.
+
+I also spent an embarrassing amount of time on the name. It started as "Latino + Original", which made perfect sense the day I wrote it. Then I imagined myself six months from now staring at a dropdown, wondering whether "+" means "both are required" or "either is fine." "Latino if available" says what it does. Future me is not as smart as present me thinks.
+
+### The Glue
+
+Profiles are only half of it. The rest is making sure everything downstream follows them without me babysitting.
+
+Radarr and Sonarr both have **Auto Tagging**. I added a rule: if the quality profile is "Latino if available", apply the tag `latino`. Bazarr can assign language profiles by tag, so anything tagged `latino` automatically gets a "Latino" subtitle profile (forced es-MX subs, full ones only when there's no Spanish audio, English as backup), and everything else keeps my default profile. Change the profile in Radarr and the subtitles follow on their own.
+
+In Seerr, the default is "Original only", with override rules that send anything in the Animation or Family genres to "Latino if available". For everything else (Marvel, Harry Potter, the stuff that isn't technically "family" but absolutely will be watched as a family) I pick the profile at request time, which is exactly the UX I wanted from the start.
+
+There's also a `family` tag that does nothing technically. It's a bookmark: "this one matters, don't delete it when you clean up." And because collections in Radarr inherit their profile, once I put the MCU and Disney collections on "Latino if available", future movies in those collections land on the right profile without anyone requesting them.
+
+### War Stories
+
+No setup like this survives first contact with real releases. A few of my favorites:
+
+**The Bluey incident.** Five Bluey episodes were still English-only, so I asked Sonarr to look for Spanish versions, and while I was at it, the specials. Sonarr decided the best way to find the specials was to search for roughly 70 of them individually, by title. The tracker's API responded the way any reasonable API would: HTTP 429, and a one-hour time-out for me. Lesson learned, specials stay out of bulk searches. Bluey would be disappointed in my lack of patience.
+
+**The Grey's Anatomy "episode".** A public indexer offered an episode of Grey's Anatomy that turned out to be a single 999 MB `.exe`. Sonarr, to its eternal credit, refused to import it. I blocklisted it and took a moment to appreciate that someone out there is trying to infect people through Meredith Grey.
+
+**"13 Capitán América Civil War".** Some releases on the tracker are numbered by MCU watch order, so the title literally starts with `13`. Radarr has no idea what to do with that and leaves it sitting in the queue. Those get manual imports, and I added a Pushover alert for "manual interaction required" so they don't rot there for a week like they used to.
+
+**Dolby Vision without a fallback.** Some 2160p releases are Dolby Vision only, with no HDR10 layer. Great on the right TV, a purple-and-green mess on the wrong one. TRaSH already has penalty scores for those, and keeping the TRaSH tiers on top of my own scores meant the penalty survived into the Latino profile too.
+
+### Cleaning Up While I Was In There
+
+Once the profiles settled, I turned on TRaSH's recommended naming scheme, which I'd been putting off for years. About **3,400 files** got renamed. The scary part was the subtitles: I have about **2,000 `es-MX` subtitle files**, and Radarr and Sonarr rename `movie.es-MX.srt` into something like `movie.MX.es.srt`, which Plex then doesn't recognize as Latin American Spanish. So the rename had to happen in a way that kept every one of those `es-MX` files paired with its video and its language code intact.
+
+While I was at it I cleaned up **1.9 TB** of orphaned seeds: torrents qBittorrent was still seeding for files that no longer existed in the library. That's a lot of disk for a good ratio and nothing else.
+
+And the last piece: a weekly **canary** script. It pulls the "Latino if available" profile and the custom-format scores from Radarr and Sonarr, works out the best possible non-Spanish score and the worst acceptable Spanish one, and pings me on Pushover if the gap ever shrinks below a safe margin. Recyclarr syncs from TRaSH, TRaSH changes its scores from time to time, and I'd much rather find out from a notification than from a four-year-old asking why Lightning McQueen is speaking English.
+
+## Results
+
+| Metric                                 | Value        |
+| -------------------------------------- | ------------ |
+| Movies on "Latino if available"        | ~150         |
+| ...already with Spanish audio          | ~126         |
+| Tracker imports that were really dual  | 32 of 35     |
+| Manual grabs from that tracker, before | 42 of 44     |
+| Files renamed to TRaSH naming          | ~3,400       |
+| `es-MX` subtitles preserved            | ~2,000       |
+| Orphaned seeds removed                 | 1.9 TB       |
+| English files that can outrank Spanish | 0, by design |
+
+The ~24 movies still missing Spanish audio are titles where no Latino release has shown up yet, or where one is still downloading. The profile keeps looking for them, which is exactly what "if available" means.
+
+## Key Takeaways
+
+1. **Check what your indexer is actually telling the app.** One appended word in a Prowlarr definition was the reason I'd been grabbing everything manually for months.
+2. **A profile's Language setting is a filter, not a preference.** If you want a preference, you need custom formats.
+3. **Quality beats score.** Radarr compares quality before custom-format score, so if language has to win, put every quality in one group and let the score decide.
+4. **Make the margin explicit, then watch it.** "Spanish always wins" is a number (+10000 vs ~6.5k), and numbers can drift when upstream scores change.
+5. **Name things for the person who'll read them in six months.** That person is you, and they've forgotten everything.
+6. **Have someone try to break your plan before you run it.** The plan that looked fine on paper had two bugs, and one of them was already active.
+
+## Final Thoughts
+
+None of this is exotic. It's TRaSH Guides, a couple of custom formats, a one-line template change, and a lot of reading about how Radarr actually makes decisions. But the result is exactly what I wanted: I request _Inside Out 2_, it shows up with Latino and English audio and the right subtitles, and I request some Korean thriller for myself and it shows up in Korean with English subs. I don't touch anything in between.
+
+Someday soon my son is going to pick a movie, it's going to start in Spanish, and he'll have no idea that a whole quality ladder and a weekly canary went into that. That's how it should be.
+
+(The server also has a dead disk I'm retiring. Some things you can't fix with a custom format.)
+
+Hit me up on Twitter [@cgTheDev](https://x.com/cgTheDev) if you're fighting the same battle with your own dubs.
+
+🖖
