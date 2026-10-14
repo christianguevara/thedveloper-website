@@ -3,7 +3,7 @@ title: Teaching My Plex Server to Speak Latino - Spanish Audio for My Son, Origi
 date: '2026-10-13'
 tags: ['self-hosting', 'unraid', 'plex', 'radarr', 'sonarr', 'homelab']
 draft: false
-summary: "I wanted my *arr stack to keep everything in its original language with subtitles, except the Disney, Pixar, Marvel and Harry Potter stuff I'll be watching with my 4-year-old, which needs Latin American Spanish audio too. The plan that looked fine on paper, a tracker that labeled every release as Spanish-only, a quality profile that could quietly replace a Spanish file with an English one, and how custom-format scores ended up doing the job a language setting couldn't."
+summary: "I wanted my *arr stack to keep everything in its original language with subtitles, except the Disney, Pixar, Marvel and Harry Potter stuff I'll be watching with my 3-year-old, which needs Latin American Spanish audio too. The plan that looked fine on paper, a tracker that labeled every release as Spanish-only, a quality profile that could quietly replace a Spanish file with an English one, and how custom-format scores ended up doing the job a language setting couldn't."
 ---
 
 🇪🇸 [Lee este post en español](/blog/arr-stack-audio-latino-espanol)
@@ -18,7 +18,7 @@ I watch everything in its original language with subtitles. Always have. Dubs ma
 
 Then I had a son.
 
-He's four now, we live in Ecuador, which means his Spanish is better than his English and his attention span is measured in Bluey episodes. The day is coming (fast) when we sit down for _Toy Story_, _Harry Potter_ or the first Avengers movie together, and when that day comes I want the Latin American dub right there. Not Castilian Spanish. Nobody here wants Buzz Lightyear saying "vosotros." Latino.
+He's three now, we live in Ecuador, which means his Spanish is better than his English and his attention span is measured in Bluey episodes. The day is coming (fast) when we sit down for _Toy Story_, _Harry Potter_ or the first Avengers movie together, and when that day comes I want the Latin American dub right there. Not Castilian Spanish. Nobody here wants Buzz Lightyear saying "vosotros." Latino.
 
 But I don't want to give up the original audio either. So the requirement was annoyingly specific:
 
@@ -191,7 +191,7 @@ Once the profiles settled, I turned on TRaSH's recommended naming scheme, which 
 
 While I was at it I cleaned up **1.9 TB** of orphaned seeds: torrents qBittorrent was still seeding for files that no longer existed in the library. That's a lot of disk for a good ratio and nothing else.
 
-And the last piece: a weekly **canary** script. It pulls the "Latino if available" profile and the custom-format scores from Radarr and Sonarr, works out the best possible non-Spanish score and the worst acceptable Spanish one, and pings me on Pushover if the gap ever shrinks below a safe margin. Recyclarr syncs from TRaSH, TRaSH changes its scores from time to time, and I'd much rather find out from a notification than from a four-year-old asking why Lightning McQueen is speaking English.
+And the last piece: a weekly **canary** script. It pulls the "Latino if available" profile and the custom-format scores from Radarr and Sonarr, works out the best possible non-Spanish score and the worst acceptable Spanish one, and pings me on Pushover if the gap ever shrinks below a safe margin. Recyclarr syncs from TRaSH, TRaSH changes its scores from time to time, and I'd much rather find out from a notification than from a three-year-old asking why Lightning McQueen is speaking English.
 
 ## Results
 

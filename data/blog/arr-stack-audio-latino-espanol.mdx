@@ -3,7 +3,7 @@ title: Enseñándole a mi Plex a hablar latino - Audio en español para mi hijo,
 date: '2026-10-13'
 tags: ['self-hosting', 'unraid', 'plex', 'radarr', 'sonarr', 'homelab', 'español']
 draft: false
-summary: 'Quería que mi *arr stack siga bajando todo en su idioma original con subtítulos, menos lo de Disney, Pixar, Marvel y Harry Potter que voy a ver con mi hijo de 4 años, que necesita audio latino también. El plan que se veía bien en papel, un tracker que etiquetaba cada release como solo-español, un quality profile que podía cambiar en silencio un archivo en español por uno en inglés, y cómo los puntajes de custom formats terminaron haciendo lo que una opción de idioma no podía.'
+summary: 'Quería que mi *arr stack siga bajando todo en su idioma original con subtítulos, menos lo de Disney, Pixar, Marvel y Harry Potter que voy a ver con mi hijo de 3 años, que necesita audio latino también. El plan que se veía bien en papel, un tracker que etiquetaba cada release como solo-español, un quality profile que podía cambiar en silencio un archivo en español por uno en inglés, y cómo los puntajes de custom formats terminaron haciendo lo que una opción de idioma no podía.'
 ---
 
 🇺🇸 [Read this post in English](/blog/arr-stack-latino-spanish-audio)
@@ -18,7 +18,7 @@ Yo veo todo en su idioma original con subtítulos. Siempre ha sido así. Los dob
 
 Y después nació mi hijo.
 
-Ya tiene cuatro años, vivimos en Ecuador, así que su español es mejor que su inglés y su capacidad de atención se mide en episodios de Bluey. Se viene el día (y rápido) en que nos sentemos juntos a ver _Toy Story_, _Harry Potter_ o la primera de los Avengers, y cuando llegue ese día quiero el doblaje latino ahí listo. No el de España. Nadie en esta casa quiere a Buzz Lightyear gritando "¡Venga, tíos, vosotros conmigo!". Latino. El Buzz de nuestra infancia, y punto.
+Ya tiene tres años, vivimos en Ecuador, así que su español es mejor que su inglés y su capacidad de atención se mide en episodios de Bluey. Se viene el día (y rápido) en que nos sentemos juntos a ver _Toy Story_, _Harry Potter_ o la primera de los Avengers, y cuando llegue ese día quiero el doblaje latino ahí listo. No el de España. Nadie en esta casa quiere a Buzz Lightyear gritando "¡Venga, tíos, vosotros conmigo!". Latino. El Buzz de nuestra infancia, y punto.
 
 Pero tampoco quiero renunciar al audio original. Así que el requisito quedó molestosamente específico:
 
@@ -191,7 +191,7 @@ Una vez que los profiles se asentaron, activé el esquema de nombres recomendado
 
 Ya que estaba, limpié **1.9 TB** de seeds huérfanos: torrents que qBittorrent seguía compartiendo (seedeando, pues) de archivos que ya no existían en la biblioteca. Eso es un montón de disco solo para tener un buen ratio y nada más.
 
-Y la última pieza: un script **canary** (un canario, como el de las minas) semanal. Saca el profile "Latino if available" y los puntajes de custom formats de Radarr y Sonarr, calcula el mejor puntaje posible para algo no-español y el peor aceptable en español, y me avisa por Pushover si la diferencia alguna vez baja de un margen seguro. Recyclarr sincroniza desde TRaSH, TRaSH cambia sus puntajes de vez en cuando, y prefiero mil veces enterarme por una notificación que por un niño de cuatro años preguntándome por qué el Rayo McQueen está hablando en inglés.
+Y la última pieza: un script **canary** (un canario, como el de las minas) semanal. Saca el profile "Latino if available" y los puntajes de custom formats de Radarr y Sonarr, calcula el mejor puntaje posible para algo no-español y el peor aceptable en español, y me avisa por Pushover si la diferencia alguna vez baja de un margen seguro. Recyclarr sincroniza desde TRaSH, TRaSH cambia sus puntajes de vez en cuando, y prefiero mil veces enterarme por una notificación que por un niño de tres años preguntándome por qué el Rayo McQueen está hablando en inglés.
 
 ## Resultados
 
