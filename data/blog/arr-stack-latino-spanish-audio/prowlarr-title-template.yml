@@ -1,0 +1,7 @@
+# Only the changed part of the tracker's Cardigann definition (copy the original into
+# Prowlarr's Definitions/Custom/ with a NEW id + filename, then replace its `title:` field).
+# title_vose / title_subs are the definition's own "original audio with subs" flags.
+fields:
+  title:
+    text: "{{ .Result.title_phase1 }}{{ if or .Result.title_vose .Result.title_subs }} ENGLiSH{{ else }} MULTi SPANiSH{{ end }}"
+# Then in Radarr and Sonarr: Settings → Indexers → (this indexer) → Multi Languages = Original, Spanish

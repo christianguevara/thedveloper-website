@@ -1,0 +1,2 @@
+{"trash_id":"local-latino-remux","name":"Remux (Latino rank)","includeCustomFormatWhenRenaming":false,
+ "specifications":[{"name":"Remux","implementation":"QualityModifierSpecification","negate":false,"required":true,"fields":{"value":5}}]}

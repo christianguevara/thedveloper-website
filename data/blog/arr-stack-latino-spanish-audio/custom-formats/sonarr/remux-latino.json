@@ -1,0 +1,2 @@
+{"trash_id":"local-sonarr-latino-remux","name":"Remux (Latino rank)","includeCustomFormatWhenRenaming":false,
+ "specifications":[{"name":"Remux (BlurayRaw)","implementation":"SourceSpecification","negate":false,"required":true,"fields":{"value":7}}]}

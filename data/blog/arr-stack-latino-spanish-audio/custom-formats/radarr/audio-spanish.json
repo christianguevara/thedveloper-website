@@ -1,0 +1,27 @@
+{
+  "trash_id": "local-audio-spanish",
+  "name": "Audio: Spanish",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Spanish",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": {
+        "value": 3,
+        "exceptLanguage": false
+      }
+    },
+    {
+      "name": "Spanish (Latino)",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": {
+        "value": 37,
+        "exceptLanguage": false
+      }
+    }
+  ]
+}

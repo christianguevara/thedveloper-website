@@ -1,0 +1,5 @@
+{"trash_id":"local-latino-bluray-encode","name":"Bluray encode (Latino rank)","includeCustomFormatWhenRenaming":false,
+ "specifications":[
+  {"name":"Bluray","implementation":"SourceSpecification","negate":false,"required":true,"fields":{"value":9}},
+  {"name":"Not Remux","implementation":"QualityModifierSpecification","negate":true,"required":true,"fields":{"value":5}},
+  {"name":"Not BR-DISK","implementation":"QualityModifierSpecification","negate":true,"required":true,"fields":{"value":4}}]}
