@@ -223,6 +223,14 @@ Someday soon my son is going to pick a movie, it's going to start in Spanish, an
 
 (The server also has a dead disk I'm retiring. Some things you can't fix with a custom format.)
 
+**The files** (my real config, with the server address, tracker name and API keys swapped for placeholders; adjust profile names, scores and language ids to your own setup):
+
+- [recyclarr.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/recyclarr.yml) - both Radarr and Sonarr: "Original only" on top of the TRaSH profiles, "Latino if available" with the single quality group and all the scores
+- [recyclarr-settings.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/recyclarr-settings.yml) - the `resource_providers` block that makes Recyclarr pick up local custom formats
+- [custom-formats/](https://github.com/christianguevara/thedveloper-website/tree/main/data/blog/arr-stack-latino-spanish-audio/custom-formats) - the local custom formats for Radarr and Sonarr: Audio: Spanish, resolution scores, and the small remux/Bluray ranking nudges
+- [prowlarr-title-template.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/prowlarr-title-template.yml) - just the changed `title` field for the custom indexer definition (not the full definition, for obvious reasons)
+- [arr-canary.sh](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/arr-canary.sh) - the weekly canary I run as an Unraid User Script; it posts through Unraid's notification agents (Pushover in my case)
+
 Hit me up on Twitter [@cgTheDev](https://x.com/cgTheDev) if you're fighting the same battle with your own dubs.
 
 🖖
