@@ -1,0 +1,238 @@
+---
+title: Enseñándole a mi Plex a hablar latino - Audio en español para mi hijo, idioma original para todo lo demás
+date: '2026-10-13'
+tags: ['self-hosting', 'unraid', 'plex', 'radarr', 'sonarr', 'homelab', 'español']
+draft: false
+summary: 'Quería que mi *arr stack siga bajando todo en su idioma original con subtítulos, menos lo de Disney, Pixar, Marvel y Harry Potter que voy a ver con mi hijo de 4 años, que necesita audio latino también. El plan que se veía bien en papel, un tracker que etiquetaba cada release como solo-español, un quality profile que podía cambiar en silencio un archivo en español por uno en inglés, y cómo los puntajes de custom formats terminaron haciendo lo que una opción de idioma no podía.'
+---
+
+🇺🇸 [Read this post in English](/blog/arr-stack-latino-spanish-audio)
+
+## Contenido
+
+<TOCInline toc={props.toc} exclude="Contenido" />
+
+## El problema
+
+Yo veo todo en su idioma original con subtítulos. Siempre ha sido así. Los doblajes me dan un tic en el ojo, y mi servidor de media está armado para eso: Plex adelante, y atrás Sonarr, Radarr, Prowlarr, qBittorrent y Bazarr, Seerr para los pedidos, y Recyclarr manteniendo los quality profiles sincronizados con las [TRaSH Guides](https://trash-guides.info/) para no tener que pensar en nada de eso.
+
+Y después nació mi hijo.
+
+Ya tiene cuatro años, vivimos en Ecuador, así que su español es mejor que su inglés y su capacidad de atención se mide en episodios de Bluey. Se viene el día (y rápido) en que nos sentemos juntos a ver _Toy Story_, _Harry Potter_ o la primera de los Avengers, y cuando llegue ese día quiero el doblaje latino ahí listo. No el de España. Nadie en esta casa quiere a Buzz Lightyear gritando "¡Venga, tíos, vosotros conmigo!". Latino. El Buzz de nuestra infancia, y punto.
+
+Pero tampoco quiero renunciar al audio original. Así que el requisito quedó molestosamente específico:
+
+- La mayoría de cosas: idioma original más subtítulos, exactamente como hoy.
+- Infantiles, familiares, Marvel, Disney/Pixar, Harry Potter y compañía: **español latino Y inglés** en el mismo archivo.
+- Idealmente escojo cuál al momento de pedirlo en Seerr, y nunca más vuelvo a pensar en eso.
+
+¿Qué tan difícil podía ser? Es solo una opción de idioma.
+
+**Plot twist**: no es solo una opción de idioma.
+
+## El plan que se veía bien en papel
+
+Mi primer plan fue el obvio. Crear un segundo quality profile (el perfil de calidad que decide qué se descarga), ponerle idioma español, apuntar lo familiar ahí, y a dormir.
+
+Antes de tocar nada hice lo que ahora hago con cualquier cosa que toque una biblioteca que me importa: escribí el plan y dejé que lo despedacen. Primero una segunda pasada adversarial ("asume que este plan está mal, descubre por qué"), y luego una revisión desde primeros principios ("olvídate del plan, ¿qué hace Radarr _realmente_ con el título de un release?"). Lo hice con Claude otra vez, igual que en los posts de eufy, y con el mismo trato: yo pongo la terquedad y los requisitos, el modelo lee código fuente y documentación más rápido de lo que yo lo haré jamás.
+
+Esa revisión encontró dos problemas reales. Los dos ya me estaban afectando y yo ni enterado.
+
+## El camino
+
+### Descubrimiento #1: todo era "Spanish"
+
+La mayoría de mis releases en latino vienen de un tracker privado latinoamericano (no voy a decir cuál, ni pregunten). Por meses noté que las búsquedas contra ese tracker casi nunca bajaban nada solas. Abría la búsqueda interactiva, veía un release perfectamente bueno con un iconito rojo de rechazo, suspiraba, y lo bajaba a mano. Después me iba a hacer otra cosa y me olvidaba del tema.
+
+Cuando por fin conté, había bajado a mano **42 de los últimos 44** releases de ese tracker. Eso ya no es una maña del sistema, eso es un trabajo a medio tiempo.
+
+La razón resultó ser una sola línea en la definición del indexer de ese tracker en Prowlarr. Las definiciones Cardigann de Prowlarr arman el título del release a partir de la página del tracker, y esta le pegaba ` SPANiSH` al final a cada título. A todos, sin excepción. Entonces Radarr veía algo así:
+
+```
+Coco 2017 1080p BluRay x264 SPANiSH
+```
+
+detectaba el idioma como español, y ahí se quedaba. Mi profile tenía el idioma en "Original", el idioma original de Coco es inglés, y Radarr hizo exactamente lo que yo le dije: rechazarlo. No tenía forma de saber que casi todos los releases de ese tracker son dual audio, latino más el original.
+
+El arreglo tuvo dos partes. Primero, una definición custom de Prowlarr. Puedes poner tu propio YAML en la carpeta `Definitions/Custom` de Prowlarr, y si le das un **id nuevo** aparece como un indexer aparte en vez de pelearse con el que viene incluido en cada actualización. Copié el original y cambié el template del título para que ponga `MULTi SPANiSH` en los releases normales, y `ENGLiSH` en los que el tracker marca como versión original con subtítulos:
+
+```yaml
+title:
+  text: '{{ .Result.title_phase1 }}{{ if or .Result.title_vose .Result.title_subs }} ENGLiSH{{ else }} MULTi SPANiSH{{ end }}'
+```
+
+Esa línea me tomó más intentos de los que me gustaría admitir. El motor de templates de Prowlarr no te deja anidar bloques `if`, que es como lo escribí al principio, así que los dos chequeos de "esto está subtitulado, no doblado" tuvieron que juntarse en un solo `if or`. Y el espacio después de `MULTi` no es decorativo: el regex de multi-idioma de Radarr necesita un separador después de la palabra, así que `MULTi-SPANiSH` o un título que termine en `MULTi` no van a hacer match como uno esperaría.
+
+La segunda parte vive en Radarr y Sonarr. Cada indexer tiene una opción **Multi Languages** que le dice a la app qué significa realmente "MULTi" para ese indexer. La puse en `Original, Spanish`. Ahora ese release de Coco se interpreta como español más inglés, el chequeo de "Original" pasa, y Radarr lo baja solito como siempre debió hacerlo.
+
+No quería quedarme solo con la teoría, así que revisé los archivos que ya había importado de ese tracker. **32 de 35** sí tenían pistas de audio en español y en inglés. Suficiente para que etiquetar todo como multi sea el default correcto. Las tres excepciones tampoco rompen nada: una vez importado el archivo, Radarr lee las pistas de audio reales, y un archivo sin español simplemente queda elegible para un upgrade.
+
+### Descubrimiento #2: "Language" es un muro, no una preferencia
+
+El segundo problema era más traicionero, y es el que me hubiera mordido _después_ de creer que ya había terminado.
+
+En un quality profile de Radarr, el campo **Language** es un filtro duro. Un release o cumple o lo rechazan. No es "prefiero español". Eso solito mata el plan ingenuo: lo pones en Spanish y todo lo que no tenga doblaje latino nunca se descarga. Lo pones en Original y los releases solo en español se mueren. Ninguna de las dos es "latino si lo encuentras, original si no".
+
+Y después está el orden de las operaciones. Cuando Radarr compara dos releases, o un release contra el archivo que ya tienes, compara **primero la calidad** y solo mira el puntaje de custom formats cuando la calidad empata. Entonces imagínate esto: tengo _Coco_ en Bluray 1080p español+inglés. Aparece un WEB-DL 2160p brillante, solo en inglés. 2160p le gana a 1080p en calidad, la comparación nunca llega al puntaje, y Radarr feliz de la vida reemplaza mi archivo en latino por uno que mi hijo no puede seguir.
+
+Y eso tampoco es hipotético. _Capitán América: Un nuevo mundo_ llegó a tener dos archivos registrados en algún momento, y un release en inglés estuvo a un import de reemplazar al de español. Me di cuenta de pura suerte.
+
+### La solución: que la calidad empate y que decida el puntaje
+
+Si la calidad se compara primero, el truco es hacer que la calidad _siempre empate_. En el profile "Latino if available", todas las calidades permitidas están dentro de **un solo quality group**. Para la comparación de calidad de Radarr, un WEB-DL 1080p y un remux 2160p son lo mismo, así que cada decisión cae al puntaje de custom formats. Y el puntaje lo controlo yo completamente.
+
+Los puntajes quedaron así:
+
+| Custom format     | Puntaje |
+| ----------------- | ------- |
+| Audio: Spanish    | +10000  |
+| Resolution 2160p  | +4000   |
+| Resolution 1080p  | +500    |
+| HDR               | +500    |
+| TRaSH tier scores | encima  |
+
+Los tiers de TRaSH, HDR y los puntajes de resolución están para que el ranking dentro de "español" (y dentro de "no español") siga igual que en mi profile normal: un buen encode Bluray-2160p le gana a un WEB-2160p, que le gana a un remux (no necesito archivos de 60 GB), que le gana a cualquier cosa en 1080p. El +10000 está para que nada de eso importe al cruzar la línea del idioma. El mejor release no-español que pude armar suma alrededor de **6.5k**. El peor release en español que todavía aceptaría suma alrededor de **8k**. No hay combinación de resolución, HDR y release group (el grupo que publica el release) que le permita a un archivo en inglés treparse por encima de uno en latino.
+
+El minimum upgrade increment es 500 para que no ande cambiando archivos por diferencias mínimas, y sigue haciendo upgrades hasta llegar a un puntaje de 20000.
+
+TRaSH tiene custom formats de idioma para francés y alemán, pero nada para español, así que escribí el mío. La especificación de idioma de Radarr lo hace fácil; el único detalle es que "Spanish" y "Spanish (Latino)" son dos idiomas distintos para Radarr (ids 3 y 37), y dependiendo del release y del parser te sale uno u otro:
+
+```json
+{
+  "trash_id": "local-audio-spanish",
+  "name": "Audio: Spanish",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Spanish",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": { "value": 3 }
+    },
+    {
+      "name": "Spanish (Latino)",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": false,
+      "fields": { "value": 37 }
+    }
+  ]
+}
+```
+
+Recyclarr v8 puede cargar custom formats locales mediante `resource_providers`, así que el CF de español vive en una carpeta junto a la configuración y se sincroniza exactamente igual que los de TRaSH. Resumido, el profile se ve así:
+
+```yaml
+quality_profiles:
+  - name: Latino if available
+    upgrade:
+      allowed: true
+      until_quality: Latino ladder
+      until_score: 20000
+    min_upgrade_format_score: 500
+    qualities:
+      - name: Latino ladder
+        qualities:
+          - Bluray-2160p
+          - WEBDL-2160p
+          - WEBRip-2160p
+          - Remux-2160p
+          - Bluray-1080p
+          - WEBDL-1080p
+          - WEBRip-1080p
+
+custom_formats:
+  - trash_ids:
+      - local-audio-spanish
+    assign_scores_to:
+      - name: Latino if available
+        score: 10000
+```
+
+Un grupo, un número grandote. Ese es todo el truco, y llegar ahí tomó dos revisiones.
+
+### Ponerle nombre a las cosas (el problema más difícil, otra vez)
+
+Terminé con dos profiles tanto en Radarr como en Sonarr:
+
+- **Original only** - el UHD Bluray + WEB de TRaSH, 2160p con fallback a 1080p (Sonarr usa el profile WEB-2160p Combined). Esto es lo que recibe todo por defecto.
+- **Latino if available** - la escalera de un solo grupo que expliqué arriba.
+
+Había un tercero, "Latino required", para cosas que simplemente deberían esperar hasta que exista un doblaje. Lo eliminé. Agregaba una decisión más al momento de pedir algo, que yo nunca iba a tomar bien, y "if available" con un puntaje suficientemente alto ya hace la parte útil.
+
+También me pasé una cantidad vergonzosa de tiempo con el nombre. Empezó como "Latino + Original", que tenía todo el sentido del mundo el día que lo escribí. Después me imaginé a mí mismo dentro de seis meses mirando un dropdown, preguntándome si el "+" significa "los dos son obligatorios" o "cualquiera sirve". "Latino if available" dice lo que hace. El yo del futuro no es tan inteligente como el yo del presente cree.
+
+### El pegamento
+
+Los profiles son solo la mitad. El resto es asegurarse de que todo lo que viene después los siga sin que yo tenga que andar de niñera.
+
+Radarr y Sonarr tienen **Auto Tagging**. Agregué una regla: si el quality profile es "Latino if available", se aplica el tag `latino`. Bazarr puede asignar language profiles por tag, así que todo lo que tiene el tag `latino` recibe automáticamente un profile de subtítulos "Latino" (subtítulos forzados es-MX, los completos solo cuando no hay audio en español, e inglés de respaldo), y todo lo demás se queda con mi profile por defecto. Cambio el profile en Radarr y los subtítulos lo siguen solitos.
+
+En Seerr, el default es "Original only", con reglas de override que mandan cualquier cosa de los géneros Animation o Family a "Latino if available". Para todo lo demás (Marvel, Harry Potter, lo que técnicamente no es "familiar" pero que definitivamente se va a ver en familia) escojo el profile al momento de pedirlo, que es exactamente la experiencia que quería desde el principio.
+
+También hay un tag `family` que técnicamente no hace nada. Es un marcador: "esto importa, no lo borres cuando hagas limpieza". Y como las colecciones en Radarr heredan su profile, una vez que puse las colecciones del MCU y de Disney en "Latino if available", las películas futuras de esas colecciones caen en el profile correcto sin que nadie las pida.
+
+### Historias de guerra
+
+Ningún setup así sobrevive al primer contacto con releases reales. Algunas de mis favoritas:
+
+**El incidente de Bluey.** Cinco episodios de Bluey seguían solo en inglés, así que le pedí a Sonarr que buscara versiones en español, y ya que estaba, los especiales. Sonarr decidió que la mejor forma de encontrar los especiales era buscar unos 70 de ellos uno por uno, por título. La API del tracker respondió como respondería cualquier API razonable: HTTP 429 y una hora de castigo para mí. Lección aprendida, los especiales no van en búsquedas masivas. Bluey estaría decepcionada de mi falta de paciencia.
+
+**El "episodio" de Grey's Anatomy.** Un indexer público ofrecía un episodio de Grey's Anatomy que resultó ser un solo `.exe` de 999 MB. Sonarr, para su eterno crédito, se negó a importarlo. Lo mandé al blocklist y me tomé un momento para apreciar que hay alguien por ahí tratando de infectar gente a través de Meredith Grey.
+
+**"13 Capitán América Civil War".** Algunos releases en el tracker están numerados según el orden para ver el MCU, así que el título literalmente empieza con `13`. Radarr no tiene idea de qué hacer con eso y lo deja ahí parado en la cola. Esos van con import manual, y agregué una alerta de Pushover para "manual interaction required" para que no se pudran ahí una semana como antes.
+
+**Dolby Vision sin fallback.** Algunos releases 2160p son solo Dolby Vision, sin capa HDR10. Espectaculares en el televisor correcto, un desastre morado y verde en el incorrecto. TRaSH ya tiene puntajes de penalización para esos, y mantener los tiers de TRaSH encima de mis propios puntajes hizo que la penalización sobreviviera también en el profile latino.
+
+### Limpiando ya que estaba ahí
+
+Una vez que los profiles se asentaron, activé el esquema de nombres recomendado por TRaSH, que llevaba años postergando. Se renombraron unos **3,400 archivos**. La parte que daba miedo eran los subtítulos: tengo unos **2,000 archivos de subtítulos `es-MX`**, y Radarr y Sonarr renombran `movie.es-MX.srt` a algo como `movie.MX.es.srt`, que Plex después no reconoce como español latinoamericano. Así que el renombrado tenía que hacerse de forma que cada uno de esos archivos `es-MX` quedara emparejado con su video y con su código de idioma intacto.
+
+Ya que estaba, limpié **1.9 TB** de seeds huérfanos: torrents que qBittorrent seguía compartiendo (seedeando, pues) de archivos que ya no existían en la biblioteca. Eso es un montón de disco solo para tener un buen ratio y nada más.
+
+Y la última pieza: un script **canary** (un canario, como el de las minas) semanal. Saca el profile "Latino if available" y los puntajes de custom formats de Radarr y Sonarr, calcula el mejor puntaje posible para algo no-español y el peor aceptable en español, y me avisa por Pushover si la diferencia alguna vez baja de un margen seguro. Recyclarr sincroniza desde TRaSH, TRaSH cambia sus puntajes de vez en cuando, y prefiero mil veces enterarme por una notificación que por un niño de cuatro años preguntándome por qué el Rayo McQueen está hablando en inglés.
+
+## Resultados
+
+| Métrica                                          | Valor         |
+| ------------------------------------------------ | ------------- |
+| Películas en "Latino if available"               | ~150          |
+| ...que ya tienen audio en español                | ~126          |
+| Imports del tracker que realmente eran dual      | 32 de 35      |
+| Descargas manuales de ese tracker, antes         | 42 de 44      |
+| Archivos renombrados al esquema de TRaSH         | ~3,400        |
+| Subtítulos `es-MX` preservados                   | ~2,000        |
+| Seeds huérfanos eliminados                       | 1.9 TB        |
+| Archivos en inglés que pueden ganarle al español | 0, por diseño |
+
+Las ~24 películas que todavía no tienen audio en español son títulos donde aún no aparece ningún release latino, o donde uno se está descargando todavía. El profile las sigue buscando, que es exactamente lo que significa "if available".
+
+## Lecciones clave
+
+1. **Revisa qué le está diciendo realmente tu indexer a la app.** Una sola palabra agregada en una definición de Prowlarr era la razón por la que llevaba meses bajando todo a mano.
+2. **La opción Language de un profile es un filtro, no una preferencia.** Si quieres una preferencia, necesitas custom formats.
+3. **La calidad le gana al puntaje.** Radarr compara la calidad antes que el puntaje de custom formats, así que si el idioma tiene que ganar, mete todas las calidades en un solo grupo y deja que decida el puntaje.
+4. **Haz explícito el margen, y después vigílalo.** "El español siempre gana" es un número (+10000 vs ~6.5k), y los números se pueden mover cuando cambian los puntajes de upstream.
+5. **Ponle nombre a las cosas pensando en quien las va a leer en seis meses.** Esa persona eres tú, y ya se olvidó de todo.
+6. **Pídele a alguien que intente romper tu plan antes de ejecutarlo.** El plan que se veía bien en papel tenía dos bugs, y uno ya estaba activo.
+
+## Reflexiones finales
+
+Nada de esto es exótico. Son las TRaSH Guides, un par de custom formats, un cambio de una línea en un template, y harto leer sobre cómo Radarr realmente toma sus decisiones. Pero el resultado es exactamente lo que quería: pido _Intensa-Mente 2_ y aparece con audio latino e inglés y los subtítulos correctos, y pido algún thriller coreano para mí y aparece en coreano con subtítulos en inglés. No toco nada en el medio.
+
+Algún día no muy lejano mi hijo va a escoger una película, va a empezar en español, y no va a tener ni idea de que detrás de eso hay toda una escalera de calidades y un canario semanal. Así es como debe ser.
+
+(El servidor además tiene un disco muerto que estoy retirando. Hay cosas que no se arreglan con un custom format.)
+
+**Los archivos** (mi configuración real, con la dirección del servidor, el nombre del tracker y las API keys reemplazados por placeholders; ajusta nombres de profiles, puntajes e ids de idioma a tu propio setup):
+
+- [recyclarr.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/recyclarr.yml) - Radarr y Sonarr: "Original only" encima de los profiles de TRaSH, "Latino if available" con el quality group único y todos los puntajes
+- [recyclarr-settings.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/recyclarr-settings.yml) - el bloque `resource_providers` que hace que Recyclarr tome los custom formats locales
+- [custom-formats/](https://github.com/christianguevara/thedveloper-website/tree/main/data/blog/arr-stack-latino-spanish-audio/custom-formats) - los custom formats locales para Radarr y Sonarr: Audio: Spanish, puntajes de resolución, y los pequeños empujoncitos de ranking entre remux y Bluray
+- [prowlarr-title-template.yml](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/prowlarr-title-template.yml) - solo el campo `title` que cambié en la definición custom del indexer (no la definición completa, por razones obvias)
+- [arr-canary.sh](https://github.com/christianguevara/thedveloper-website/blob/main/data/blog/arr-stack-latino-spanish-audio/arr-canary.sh) - el canario semanal que corro como User Script en Unraid; manda los avisos por los notification agents de Unraid (Pushover en mi caso)
+
+Escríbeme en Twitter [@cgTheDev](https://x.com/cgTheDev) si estás peleando la misma batalla con tus propios doblajes.
+
+🖖
