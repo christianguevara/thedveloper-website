@@ -151,9 +151,10 @@ sonarr:
           - name: Bluray-2160p Remux                 # not allowed; ranked above 1080p so a 4K episode is never
             enabled: false                           #   replaced by WEB-1080p (TRaSH's JSON ranks them below it)
           - name: Bluray-2160p
-            enabled: false
+            enabled: true   # allowed (Oct 17): 4K Bluray encodes for shows with no 4K WEB
           - name: WEB 1080p
             qualities: [WEBDL-1080p, WEBRip-1080p]
+          - name: Bluray-1080p                       # fallback (Oct 17): older shows only released on Bluray (e.g. Dexter)
 
       - name: Latino if available (TV)
         reset_unmatched_scores:

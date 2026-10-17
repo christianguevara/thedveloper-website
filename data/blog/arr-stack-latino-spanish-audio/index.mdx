@@ -156,7 +156,7 @@ One group, one big number. That's the whole trick, and it took two reviews to ge
 
 I ended up with two profiles in both Radarr and Sonarr:
 
-- **Original only** - TRaSH's UHD Bluray + WEB, 2160p with 1080p fallback (Sonarr uses the WEB-2160p Combined profile). This is what everything gets by default.
+- **Original only** - TRaSH's UHD Bluray + WEB, 2160p with 1080p fallback (Sonarr uses TRaSH's WEB-2160p Combined, plus Bluray as a fallback, because older shows like Dexter only exist on Bluray in HD and a WEB-only profile would never grab them). This is what everything gets by default.
 - **Latino if available** - the one-group ladder above.
 
 There was a third, "Latino required", for things that should simply wait until a dub exists. I dropped it. It added a decision at request time that I'd never get right, and "if available" with a high enough score already does the useful part.
