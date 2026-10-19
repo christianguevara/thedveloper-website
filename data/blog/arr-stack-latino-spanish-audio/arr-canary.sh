@@ -244,10 +244,15 @@ elif [ $(( $(date +%s) - $(stat -c %Y "$LOG") )) -gt $((2*86400)) ]; then proble
 elif grep -qE '^\[[0-9:]+ (WRN|ERR|FTL)\]' "$LOG"; then problem "Recyclarr: warnings/errors in last run: $(grep -E '^\[[0-9:]+ (WRN|ERR|FTL)\]' "$LOG" | head -3 | cut -c1-200)"
 else ok "Recyclarr: last run clean"; fi
 
-# 8) Custom Prowlarr definition present and not older than the upstream one it was copied from
+# 8) Custom Prowlarr definition present and matching upstream apart from our edits.
+#    Compares content, not mtime: Prowlarr re-downloads definitions on its own, which bumps the
+#    upstream file's date without changing it. Our edits (id/name, the title_subs block, the title
+#    text line) are stripped from both files before comparing.
+def_norm(){ sed -E '/^(id|name):/d; /^[[:space:]]+text: "\{\{ \.Result\.title_phase1/d' "$1" \
+  | awk '/^[[:space:]]+title_subs:/{skip=3} skip>0{skip--; next} {print}'; }
 if [ ! -f "$CUSTOM_DEF" ]; then problem "Prowlarr: $CUSTOM_DEF missing"
-elif [ -f "$UPSTREAM_DEF" ] && [ "$UPSTREAM_DEF" -nt "$CUSTOM_DEF" ]; then
-  problem "Prowlarr: upstream your-tracker.yml changed after your custom copy — diff them and port the change (keep the title lines)"
+elif [ -f "$UPSTREAM_DEF" ] && ! diff -q <(def_norm "$UPSTREAM_DEF") <(def_norm "$CUSTOM_DEF") >/dev/null; then
+  problem "Prowlarr: upstream your-tracker.yml changed beyond your edits — port the change (keep the title lines): $(diff <(def_norm "$UPSTREAM_DEF") <(def_norm "$CUSTOM_DEF") | grep -E '^[<>]' | head -3 | cut -c1-150 | tr '\n' ' ')"
 else ok "Prowlarr: custom YOUR-TRACKER definition present and current"; fi
 
 # 8b) Disk: free-space floors (convergence batches must stop when these trip)
